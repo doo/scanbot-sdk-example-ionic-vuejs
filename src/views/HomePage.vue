@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
+    <ion-header>
+      <ion-toolbar color="primary">
         <ion-title>Scanbot SDK Example</ion-title>
       </ion-toolbar>
     </ion-header>
