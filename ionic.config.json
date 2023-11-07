@@ -1,0 +1,7 @@
+{
+  "name": "scanbot-sdk-example-ionic-vuejs",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
