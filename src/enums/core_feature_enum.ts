@@ -1,0 +1,16 @@
+export enum CoreFeatureEnum {
+    Document,
+    ImageResult,
+    Barcode,
+    BatchBarcode,
+    ImportBarcode,
+    MRZ,
+    EHIC,
+    Check,
+    LicensePlate,
+    TextData,
+    GenericDocument,
+    LicenseInfo,
+    OCRConfig,
+    LearnMore,
+}
