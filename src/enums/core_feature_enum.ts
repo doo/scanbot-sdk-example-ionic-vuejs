@@ -9,6 +9,7 @@ export enum CoreFeatureEnum {
     Check,
     LicensePlate,
     TextData,
+    MedicalCertificate,
     GenericDocument,
     LicenseInfo,
     OCRConfig,

@@ -43,9 +43,11 @@ import {
   IonItemDivider,
   IonItemGroup,
 } from "@ionic/vue";
+
 import { ScanbotSDKService } from "../services/scanbot-service";
 
 import { CORE_FEATURES } from "../utils/feature-util";
+import { CoreFeatureEnum } from "../enums/core_feature_enum";
 
 // The onMounted hook can be used to run code after the component has finished the initial rendering and created the DOM nodes.
 onMounted(() => {
@@ -55,8 +57,71 @@ onMounted(() => {
 // -------------------------
 // Item Click Event
 // -------------------------
-const itemOnClick = (selectedItem: any) => {
-  alert(JSON.stringify(selectedItem));
+const itemOnClick = async (selectedItem: CoreFeatureEnum) => {
+  switch (selectedItem) {
+    case CoreFeatureEnum.Document: {
+      await ScanbotSDKService.startDocumentScanner();
+      break;
+    }
+    case CoreFeatureEnum.ImageResult: {
+      break;
+    }
+    case CoreFeatureEnum.Barcode: {
+      await ScanbotSDKService.startBarcodeScanner();
+      break;
+    }
+    case CoreFeatureEnum.BatchBarcode: {
+      await ScanbotSDKService.startBatchBarcodeScanner();
+      break;
+    }
+    case CoreFeatureEnum.ImportBarcode: {
+      alert("ImportBarcode");
+      break;
+    }
+    case CoreFeatureEnum.MRZ: {
+      await ScanbotSDKService.startMrzScanner();
+      break;
+    }
+    case CoreFeatureEnum.EHIC: {
+      await ScanbotSDKService.startEHICScanner();
+      break;
+    }
+    case CoreFeatureEnum.MedicalCertificate: {
+      await ScanbotSDKService.startMedicalCertificateRecognizer();
+      break;
+    }
+    case CoreFeatureEnum.Check: {
+      await ScanbotSDKService.startCheckRecognizer();
+      break;
+    }
+    case CoreFeatureEnum.LicensePlate: {
+      await ScanbotSDKService.startLicensePlateScanner();
+      break;
+    }
+    case CoreFeatureEnum.TextData: {
+      await ScanbotSDKService.startTextDataScanner();
+      break;
+    }
+    case CoreFeatureEnum.GenericDocument: {
+      break;
+    }
+    case CoreFeatureEnum.LicenseInfo: {
+      alert("LicenseInfo");
+      break;
+    }
+    case CoreFeatureEnum.OCRConfig: {
+      alert("OCRConfig");
+      break;
+    }
+    case CoreFeatureEnum.LearnMore: {
+      alert("LearnMore");
+      break;
+    }
+    default: {
+      //statements;
+      break;
+    }
+  }
 };
 </script>
 
