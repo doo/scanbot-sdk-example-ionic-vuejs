@@ -13,7 +13,13 @@ import {
   MedicalCertificateRecognizerConfiguration,
   CroppingConfiguration,
   Page,
+  InitializeSDKResult,
+  GetLicenseInfoResult,
+  DocumentScannerResult,
 } from "capacitor-plugin-scanbot-sdk";
+
+import { ErrorHandelingService } from "./error_handling_service";
+import { ShowAlert } from "./alert_service";
 
 export default class ScanbotService {
   /**
@@ -44,12 +50,23 @@ export default class ScanbotService {
     // 	console.log("Changed Storage Base Directory to " + configuration.storageBaseDirectory);
     // }
 
-    const results = await ScanbotSDK.initializeSDK(configuration);
-
-    console.log(JSON.stringify(results));
+    const result = await ErrorHandelingService<InitializeSDKResult>(() => ScanbotSDK.initializeSDK(configuration));
+    console.log(JSON.stringify(result));
   }
 
-  public async startDocumentScanner() {
+  public async validateLicense() {
+    const result = await ErrorHandelingService<GetLicenseInfoResult>(() => ScanbotSDK.getLicenseInfo());
+    if (result?.isLicenseValid) {
+      // OK - we have a trial session, a valid trial license or valid production license.
+      return true;
+    }
+    alert('Scanbot SDK (trial) license has expired!');
+    return false;
+  }
+
+  public startDocumentScanner = async () : Promise<DocumentScannerResult> => {
+    //if (!this.validateLicense()) return;
+
     const configuration: DocumentScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       cameraPreviewMode: "FIT_IN",
@@ -62,12 +79,8 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const result = await ScanbotSDK.startDocumentScanner(configuration);
-
-    if (result.status === "OK") {
-      alert("first document");
-      return;
-    }
+    const documentScannerResult = await ErrorHandelingService<DocumentScannerResult>(() => ScanbotSDK.startDocumentScanner(configuration));
+    return documentScannerResult!;
   }
 
   public async startCroppingScreen(page: Page) {
@@ -302,6 +315,7 @@ export default class ScanbotService {
       finderLineColor: "#c8193c",
       finderLineWidth: 5,
       orientationLockMode: "PORTRAIT",
+      finderTextHint: 'Place the whole license plate in the frame to scan it',
       confirmationDialogConfirmButtonFilled: true,
       // see further configs...
     };

@@ -44,10 +44,14 @@ import {
   IonItemGroup,
 } from "@ionic/vue";
 
-import { ScanbotSDKService } from "../services/scanbot-service";
+import { ScanbotSDKService } from '../services/scanbot-service';
 
 import { CORE_FEATURES } from "../utils/feature-util";
 import { CoreFeatureEnum } from "../enums/core_feature_enum";
+
+import { useRouter } from 'vue-router';
+import { DocumentScannerResult } from "capacitor-plugin-scanbot-sdk";
+const router = useRouter();
 
 // The onMounted hook can be used to run code after the component has finished the initial rendering and created the DOM nodes.
 onMounted(() => {
@@ -60,7 +64,8 @@ onMounted(() => {
 const itemOnClick = async (selectedItem: CoreFeatureEnum) => {
   switch (selectedItem) {
     case CoreFeatureEnum.Document: {
-      await ScanbotSDKService.startDocumentScanner();
+      alert('hello2');
+      //await router.push('/image_preview');
       break;
     }
     case CoreFeatureEnum.ImageResult: {
