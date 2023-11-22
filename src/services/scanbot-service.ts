@@ -402,7 +402,7 @@ export default class ScanbotService {
     });
   }
 
-  public async getImageData() {
+  public async getImageData(imageFileUri: string) {
     // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
     // if (!licenseCheckMethod()) {
     //   return;
@@ -410,10 +410,10 @@ export default class ScanbotService {
 
     // Use the low-res image file "documentPreviewImageFileUri" of a Page for the preview:
     const result = await ScanbotSDK.getImageData({
-      imageFileUri: "",
+      imageFileUri: imageFileUri,
     });
 
-    const decryptedImageDataAsBase64 = `data:image/jpeg;base64,${result.base64ImageData}`;
+    return `data:image/jpeg;base64,${result.base64ImageData}`;
   }
 
   public async applyImageFilterOnImage() {

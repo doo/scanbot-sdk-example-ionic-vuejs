@@ -2,11 +2,10 @@ import { Page } from 'capacitor-plugin-scanbot-sdk';
 
 export class StorageService {
 
-    //public static INSTANCE = new StorageService();
-
-    public static get getInstance() {
-        return new StorageService();
-    }
+    public static INSTANCE = new StorageService();
+    // public static get getInstance() {
+    //     return new StorageService();
+    // }
 
     private pages: Page[] = [];
 

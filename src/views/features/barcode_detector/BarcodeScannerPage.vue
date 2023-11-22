@@ -1,5 +1,5 @@
 <template>
-    <CoreFeatureItemsView title="Scan Barcodes" v-bind:coreItems="coreItems"/>
+    <CoreFeatureItemsView title="Scan Barcodes" v-bind:coreItems="coreItems" :onItemClick="onItemClick"/>
 </template>
   
 <script setup lang="ts">
@@ -18,4 +18,8 @@ const selectedItemId = router.currentRoute.value.params.selectedItem as unknown 
 onMounted(() => {
     coreItems = getItemList(selectedItemId);
 });
+
+const onItemClick = (selectedItem: CoreFeatureEnum) => {
+    alert(selectedItem);
+}
 </script>
