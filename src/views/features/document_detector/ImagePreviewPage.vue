@@ -8,10 +8,10 @@
                 <ion-title>Image Preview</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content :fullscreen="true">
+        <ion-content>
             <ion-grid>
                 <ion-row>
-                    <ion-col size="6" v-for="image in imageData" :key="image['id']">
+                    <ion-col size="6" v-for="image in data" :key="image['id']">
                         <ion-img v-bind:src="image['url']" />
                     </ion-col>
                 </ion-row>
@@ -20,11 +20,16 @@
 
         <ion-footer>
             <ion-toolbar color="primary">
-                <ion-buttons>
-                    <ion-button>Add</ion-button>
-                    <ion-button>Add</ion-button>
-                    <ion-button>Add</ion-button>
+                <ion-buttons slot="start">
+                    <ion-button @click="startDocumentScanner()">Add Page</ion-button>
+                    <ion-button>Filter</ion-button>
+                    <ion-button>Save</ion-button>
                 </ion-buttons>
+
+                <ion-buttons slot="end">
+                    <ion-button>Delete All</ion-button>
+                </ion-buttons>
+
             </ion-toolbar>
         </ion-footer>
     </ion-page>
@@ -33,16 +38,17 @@
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonImg, IonCol } from '@ionic/vue';
 import { Page } from 'capacitor-plugin-scanbot-sdk';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { StorageService } from '@/services/storage_service';
+import { ShowAlert } from '@/services/alert_service';
 
-let pages: Page[] = StorageService.INSTANCE.getPages();
-let imageData: { id: string; url: string; }[] = [];
+let pages: Page[] = [];
+
+let data = ref<any>([]);
 
 onMounted(async () => {
-    alert(pages.length);
     await reloadPages();
 });
 
@@ -50,17 +56,33 @@ onMounted(async () => {
 async function reloadPages() {
     //if (!(await ScanbotSDKService.checkLicense())) { return; }
     //if (!hasScannedPages()) { return; }
-
+    pages = StorageService.INSTANCE.getPages();
     try {
         for (const page of pages) {
             const url = page.documentPreviewImageFileUri as string;
             const imageURL = await ScanbotSDKService.getImageData(url);
-            if (imageURL === '' || imageURL === undefined) break;
-            imageData.push({ id: page.pageId, url: imageURL });
+            //if (imageURL === '' || imageURL === undefined) break;
+            
+            data.value.push({ id: page.pageId, url: imageURL });
         }
     }
     catch (error) {
         console.error(error);
     }
+}
+
+const startDocumentScanner = async () => {
+    const documentResult = await ScanbotSDKService.startDocumentScanner();
+
+    if (documentResult.status == 'CANCELED') {
+        await ShowAlert('Information', 'Document scanner has been canceled.', ['OK']);
+        return;
+    };
+
+    await StorageService.INSTANCE.addPages(documentResult.pages);
+
+    data.value = [];
+
+    await reloadPages();
 }
 </script>

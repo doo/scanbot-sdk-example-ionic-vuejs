@@ -42,6 +42,10 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
             await startDocumentScanner();
             break;
         }
+        case CoreFeatureEnum.ImageResult: {
+            await router.push('/image_preview');
+            break;
+        }
         default: {
             //statements;
             break;
