@@ -22,12 +22,16 @@
             <ion-toolbar color="primary">
                 <ion-buttons slot="start">
                     <ion-button @click="startDocumentScanner()">Add Page</ion-button>
-                    <ion-button>Filter</ion-button>
-                    <ion-button>Save</ion-button>
+
+                    <ion-button id="open-pdf-page-option" expand="block">Create PDF</ion-button>
+                    <CommonModalView trigger="open-pdf-page-option" title="PDF Page Size Options" v-bind:optionList="PDFPageSizeList"/>
+
+                    <ion-button id="open-tiff-option" expand="block">Create TIFF</ion-button>
+                    <CommonModalView trigger="open-tiff-option" title="Tiff Creation Options" v-bind:optionList="TiffOptions"/>
                 </ion-buttons>
 
                 <ion-buttons slot="end">
-                    <ion-button>Delete All</ion-button>
+                    <ion-button>Delete</ion-button>
                 </ion-buttons>
 
             </ion-toolbar>
@@ -43,6 +47,8 @@ import { onMounted, ref } from 'vue';
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { StorageService } from '@/services/storage_service';
 import { ShowAlert } from '@/services/alert_service';
+import CommonModalView from '../../common_views/CommonModalView.vue';
+import { PDFPageSizeList, TiffOptions } from '@/utils/feature-util';
 
 let pages: Page[] = [];
 
@@ -62,7 +68,7 @@ async function reloadPages() {
             const url = page.documentPreviewImageFileUri as string;
             const imageURL = await ScanbotSDKService.getImageData(url);
             //if (imageURL === '' || imageURL === undefined) break;
-            
+
             data.value.push({ id: page.pageId, url: imageURL });
         }
     }
