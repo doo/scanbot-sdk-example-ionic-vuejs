@@ -4,7 +4,6 @@ import { CoreFeatureEnum } from "../enums/core_feature_enum";
 import { PDFPageSizeEnum } from "@/enums/pdf_page_size_enum";
 import { TiffOptionsEnum } from "@/enums/tiff_option_enum";
 
-
 export const CORE_FEATURES: CoreFeatureModel[] = [
   {
     id: CoreFeatureIdEnum.DocumentDetector,
@@ -69,4 +68,21 @@ export const PDFPageSizeList = [
 export const TiffOptions = [
   { key: TiffOptionsEnum.Binarized, value: "Binarized Images (1-bit)" },
   { key: TiffOptionsEnum.Color, value: "Color Images" },
+];
+
+export const FilterOptions = [
+  { key: "ImageFilterTypeNone", value: 'None' },
+  { key: 'ImageFilterTypeColor', value: 'Color Enhanced' },
+  { key: "ImageFilterTypeGray", value: 'Gray Scale' },
+  { key: 'ImageFilterTypePureGray', value: 'Pure Gray' },  
+  { key: "ImageFilterTypeBinarized", value: 'Binarized' },
+  { key: "ImageFilterTypeColorDocument", value: 'Color Document' },
+  { key: "ImageFilterTypePureBinarized", value: 'Pure Binarized' },
+  { key: "ImageFilterTypeBackgroundClean", value: 'Background Clean' },
+  { key: "ImageFilterTypeBlackAndWhite", value: 'Black and White' },
+  { key: 'ImageFilterTypeOtsuBinarization', value: 'OTSU Binarization' },
+  { key: 'ImageFilterTypeDeepBinarization', value: 'Deep Binarization' },
+  { key: 'ImageFilterTypeEdgeHighlight', value: 'Edge Highlight' },
+  { key: 'ImageFilterTypeLowLightBinarization', value: 'Low Light Binarization' },
+  { key: 'ImageFilterTypeLowLightBinarization2', value: 'Low Light Binarization 2' },
 ];

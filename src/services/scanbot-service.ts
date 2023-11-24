@@ -16,6 +16,8 @@ import {
   InitializeSDKResult,
   GetLicenseInfoResult,
   DocumentScannerResult,
+  PDFPageSize,
+  ImageFilterType,
 } from "capacitor-plugin-scanbot-sdk";
 
 import { ErrorHandelingService } from "./error_handling_service";
@@ -99,15 +101,10 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const result = await ScanbotSDK.startCroppingScreen({
+    return await ScanbotSDK.startCroppingScreen({
       page: page,
       configuration: configuration,
     });
-
-    if (result.status === "CANCELED") {
-      // User has canceled the cropping operation
-      return;
-    }
   }
 
   public async startBarcodeScanner() {
@@ -416,33 +413,29 @@ export default class ScanbotService {
     return `data:image/jpeg;base64,${result.base64ImageData}`;
   }
 
-  public async applyImageFilterOnImage() {
+  public async applyImageFilterOnImage(imageUrl: string, imageFilter: ImageFilterType) {
     // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
     // if (!licenseCheckMethod()) {
     //   return;
     // }
 
-    const result = await ScanbotSDK.applyImageFilter({
-      imageFileUri: "file:///some/image-file.jpg",
-      filter: "ImageFilterTypeGray", // See available filters below
+    return await ScanbotSDK.applyImageFilter({
+      imageFileUri: imageUrl,
+      filter: imageFilter, // See available filters below
     });
 
-    const filteredImageUri: string = result.imageFileUri;
+    
   }
 
-  public async applyImageFilterOnPage(scannedPage: Page) {
+  public async applyImageFilterOnPage(scannedPage: Page, imageFilter: ImageFilterType) {
     // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
     // if (!licenseCheckMethod()) {
     //   return;
     // }
-
-    const result = await ScanbotSDK.applyImageFilterOnPage({
+    return await ScanbotSDK.applyImageFilterOnPage({
       page: scannedPage,
-      filter: "ImageFilterTypeBinarized",
+      filter: imageFilter,
     });
-
-    // Use the updated page from result
-    const filteredPage: Page = result;
   }
 
   public async getFilteredDocumentPreviewUri(scannedPage: Page) {
@@ -471,32 +464,36 @@ export default class ScanbotService {
     }
   }
 
-  public async createPDF() {
+  public async createPDF(urls: string[], pageSize: PDFPageSize) {
     // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
     // if (!licenseCheckMethod()) {
     //   return;
     // }
 
     const result = await ScanbotSDK.createPDF({
-      imageFileUris: [],
-      pageSize: "FIXED_A4",
+      imageFileUris: urls,
+      pageSize: pageSize,
     });
+
+    alert(JSON.stringify(result));
   }
 
-  public async writeTIFF() {
+  public async writeTIFF(urls: string[], binarized: boolean) {
     // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
     // if (!licenseCheckMethod()) {
     //   return;
     // }
 
     const result = await ScanbotSDK.writeTIFF({
-      imageFileUris: [],
+      imageFileUris: urls,
       options: {
-        oneBitEncoded: true,
+        oneBitEncoded: binarized,
         dpi: 300,
-        compression: "CCITT_T6",
+        compression: binarized ? 'CCITT_T6' : 'ADOBE_DEFLATE',
       },
     });
+
+    alert(JSON.stringify(result));
   }
 }
 

@@ -4,6 +4,7 @@ import HomePage from '@/views/HomePage.vue';
 import ImagePreviewPage from '@/views/features/document_detector/ImagePreviewPage.vue';
 import DocumentScannerPage from '../views/features/document_detector/DocumentScannerPage.vue';
 import BarcodeScannerPage from '../views/features/barcode_detector/BarcodeScannerPage.vue';
+import ImageEditPage from '@/views/features/document_detector/ImageEditPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/image_preview',
     name: 'ImagePreview',
     component: ImagePreviewPage,
+  },
+  {
+    path: '/image_edit/:selectedPageId',
+    name: 'ImageEditPage',
+    component: ImageEditPage,
   },
   {
     path: '/document_scanner/:selectedItem',
