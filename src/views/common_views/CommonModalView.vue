@@ -11,7 +11,8 @@
         </ion-header>
         <ion-content class="ion-padding">
             <ion-list>
-                <ion-item :button="true" v-for="item in props.optionList" :key="item['key']" @click="onItemClick(item['key'])">
+                <ion-item :button="true" v-for="item in props.optionList" :key="item['key']"
+                    @click="onItemClick(item['key'])">
                     <ion-label>{{ item.value }}</ion-label>
                 </ion-item>
             </ion-list>
@@ -39,5 +40,10 @@ interface Props {
     optionList: { key: any; value: any; }[]
     onItemClick: Function
 }
-const props = defineProps<Props>()
+
+const props = defineProps<Props>();
+
+defineExpose({
+    cancel
+});
 </script>

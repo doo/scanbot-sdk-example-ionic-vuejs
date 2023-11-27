@@ -24,10 +24,10 @@
                     <ion-button @click="startDocumentScanner()">Add Page</ion-button>
 
                     <ion-button id="open-pdf-page-option" expand="block" >Create PDF</ion-button>
-                    <CommonModalView trigger="open-pdf-page-option" title="PDF Page Size Options" v-bind:optionList="PDFPageSizeList" :onItemClick="createPDF"/>
+                    <CommonModalView trigger="open-pdf-page-option" title="PDF Page Size Options" v-bind:optionList="PDFPageSizeList" :onItemClick="createPDF" ref="pdfPageSizeModal"/>
 
                     <ion-button id="open-tiff-option" expand="block">Create TIFF</ion-button>
-                    <CommonModalView trigger="open-tiff-option" title="Tiff Creation Options" v-bind:optionList="TiffOptions" :onItemClick="writeTIFF"/>
+                    <CommonModalView trigger="open-tiff-option" title="Tiff Creation Options" v-bind:optionList="TiffOptions" :onItemClick="writeTIFF" ref="tiffOptionModal"/>
                 </ion-buttons>
 
                 <ion-buttons slot="end">
@@ -39,7 +39,7 @@
 </template>
   
 <script setup lang="ts">
-import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonImg, IonCol } from '@ionic/vue';
+import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonImg, IonCol, onIonViewWillEnter } from '@ionic/vue';
 import { Page, PDFPageSize } from 'capacitor-plugin-scanbot-sdk';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -56,8 +56,10 @@ const router = useRouter();
 
 let pages: Page[] = [];
 let data = ref<any>([]);
+const pdfPageSizeModal = ref();
+const tiffOptionModal = ref();
 
-onMounted(async () => {
+onIonViewWillEnter(async () => {
     await reloadPages();
 });
 
@@ -70,6 +72,7 @@ async function reloadPages() {
     //if (!(await ScanbotSDKService.checkLicense())) { return; }
     //if (!hasScannedPages()) { return; }
     pages = StorageService.INSTANCE.getPages();
+    data.value = [];
     try {
         for (const page of pages) {
             const url = page.documentPreviewImageFileUri as string;
@@ -94,8 +97,6 @@ const startDocumentScanner = async () => {
 
     await StorageService.INSTANCE.addPages(documentResult.pages);
 
-    data.value = [];
-
     await reloadPages();
 }
 
@@ -104,6 +105,8 @@ const createPDF = async (selectedItem: PDFPageSizeEnum) => {
     const pdfPageSize = PDFPageSizeList[selectedItem].value as PDFPageSize;
 
     await ScanbotSDKService.createPDF(imageUrls, pdfPageSize);
+
+    pdfPageSizeModal.value.cancel();
 }
 
 const writeTIFF = async (selectedItem: TiffOptionsEnum) => {
@@ -111,6 +114,8 @@ const writeTIFF = async (selectedItem: TiffOptionsEnum) => {
     const binarized = selectedItem == TiffOptionsEnum.Binarized;
 
     await ScanbotSDKService.writeTIFF(imageUrls, binarized);
+
+    tiffOptionModal.value.cancel();
 }
 
 const deleteAll = async () => {

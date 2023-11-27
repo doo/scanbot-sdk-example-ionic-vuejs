@@ -22,7 +22,7 @@
 
                     <ion-button id="open-filter-option" expand="block">Filter</ion-button>
                     <CommonModalView trigger="open-filter-option" title="Filter Options" v-bind:optionList="FilterOptions"
-                        :onItemClick="onFilterSelected" />
+                        :onItemClick="onFilterSelected" ref="filterOptionModal"/>
                 </ion-buttons>
             </ion-toolbar>
         </ion-footer>
@@ -31,7 +31,7 @@
   
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonImg, IonCard } from '@ionic/vue';
-import { ImageFilterType, Page, PDFPageSize } from 'capacitor-plugin-scanbot-sdk';
+import { ImageFilterType, Page } from 'capacitor-plugin-scanbot-sdk';
 import { onMounted, ref } from 'vue';
 
 
@@ -46,6 +46,7 @@ const selectedPageId = router.currentRoute.value.params.selectedPageId as unknow
 let selectedPage: any = null;
 
 let imageURL = ref<string>();
+const filterOptionModal = ref();
 
 onMounted(async () => {
     await loadData();
@@ -70,6 +71,7 @@ const startCroppingScreen = async () => {
 const onFilterSelected = async (selectedFilterItem: string) => {
     const filteredResult = await ScanbotSDKService.applyImageFilterOnPage(selectedPage, selectedFilterItem as ImageFilterType);
     await updatePage(filteredResult);
+    filterOptionModal.value.cancel();
 }
 
 </script>
