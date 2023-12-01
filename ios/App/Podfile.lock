@@ -3,6 +3,8 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (5.0.6):
     - Capacitor
+  - CapacitorCamera (5.0.7):
+    - Capacitor
   - CapacitorCordova (5.5.1)
   - CapacitorHaptics (5.0.6):
     - Capacitor
@@ -21,6 +23,7 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
@@ -37,6 +40,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorHaptics:
@@ -51,6 +56,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 9da0a2415e3b6098511f8b5ffdb578d91ee79f8f
   CapacitorApp: 024e1b1bea5f883d79f6330d309bc441c88ad04a
+  CapacitorCamera: 084b0b228bba7d00587910337b1c89e93b1d32ab
   CapacitorCordova: e128cc7688c070ca0bfa439898a5f609da8dbcfe
   CapacitorHaptics: 1fffc1217c7e64a472d7845be50fb0c2f7d4204c
   CapacitorKeyboard: b978154b024a5f65e044908e37d15b7de58b9d12
@@ -59,6 +65,6 @@ SPEC CHECKSUMS:
   ScanbotSDK: 88ea9100f2d6fe0c0fddc707bff470e7f71387d8
   ScanbotSDKNativeWrapper: 19e20308d7b7334081a1fa8494ea616f9f324b3f
 
-PODFILE CHECKSUM: 4d62513c9a8f239d7ec49ea159f2182eedb2aa1f
+PODFILE CHECKSUM: f8d3a650ff10d8dfb1c8de827da70756872ed9f2
 
 COCOAPODS: 1.12.0

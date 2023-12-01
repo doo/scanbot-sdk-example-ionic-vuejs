@@ -5,6 +5,7 @@ import ImagePreviewPage from '@/views/features/document_detector/ImagePreviewPag
 import DocumentScannerPage from '../views/features/document_detector/DocumentScannerPage.vue';
 import BarcodeScannerPage from '../views/features/barcode_detector/BarcodeScannerPage.vue';
 import ImageEditPage from '@/views/features/document_detector/ImageEditPage.vue';
+import BarcodeResultPage from '../views/features/barcode_detector/BarcodeResultPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -35,6 +36,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/barcode_scanner/:selectedItem',
     name: 'BarcodeScannerPage',
     component: BarcodeScannerPage,
+  },
+  {
+    path: '/barcode_result',
+    name: 'BarcodeResultPage',
+    component: BarcodeResultPage,
   },
 ]
 

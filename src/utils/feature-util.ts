@@ -21,8 +21,8 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
     items: [
       { key: CoreFeatureEnum.Barcode, value: "Scan QR-/Barcode" },
       { key: CoreFeatureEnum.BatchBarcode, value: "Scan Batch of Barcodes" },
-      { key: CoreFeatureEnum.ImportBarcode, value: "Import Image & Detect Barcodes" },
-      { key: CoreFeatureEnum.ImportBarcode, value: "Import Images & Detect Barcodes" },
+      { key: CoreFeatureEnum.ImportBarcodeImage, value: "Import Image & Detect Barcodes" },
+      { key: CoreFeatureEnum.ImportBarcodeImages, value: "Import Images & Detect Barcodes" },
     ],
   },
   {
