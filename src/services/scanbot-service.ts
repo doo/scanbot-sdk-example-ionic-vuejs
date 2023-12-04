@@ -214,13 +214,13 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const result: MrzResult = await ScanbotSDK.startMrzScanner(configuration);
+    const mrzResult: MrzResult = await ScanbotSDK.startMrzScanner(configuration);
 
-    if (result.status === "CANCELED") {
+    if (mrzResult.status === "CANCELED") {
       // User has canceled the scanning operation
       return;
     }
-    alert(JSON.stringify(result));
+    return mrzResult;
   }
 
   public async startEHICScanner() {
@@ -237,13 +237,13 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const result = await ScanbotSDK.startEHICScanner(configuration);
+    const ehicResult = await ScanbotSDK.startEHICScanner(configuration);
 
-    if (result.status === "CANCELED") {
+    if (ehicResult.status === "CANCELED") {
       // user has canceled the scanning operation
       return;
     }
-    alert(JSON.stringify(result));
+    return ehicResult;
   }
 
   public async startCheckRecognizer() {
@@ -260,14 +260,14 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const result = await ScanbotSDK.startCheckRecognizer(configuration);
+    const checkResult = await ScanbotSDK.startCheckRecognizer(configuration);
 
-    if (result.status === "CANCELED") {
+    if (checkResult.status === "CANCELED") {
       // user has canceled the scanning operation
       return;
     }
 
-    alert(JSON.stringify(result));
+    return checkResult;
   }
 
   public async startTextDataScanner() {

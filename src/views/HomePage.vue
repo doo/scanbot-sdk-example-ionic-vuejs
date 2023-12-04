@@ -26,16 +26,10 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonItemDivider,
-  IonItemGroup,
-  IonCol,
-  IonGrid,
-  IonRow,
-  IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle,
-  IonButton,
+  IonCard, 
+  IonCardHeader, 
+  IonCardSubtitle, 
+  IonCardTitle,
 } from "@ionic/vue";
 
 import { ScanbotSDKService } from '../services/scanbot-service';
@@ -65,6 +59,7 @@ const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
       break;
     }
     case CoreFeatureIdEnum.DataDetactor: {
+      await router.push('/data_detector/'+ selectedItem);
       break;
     }
     case CoreFeatureIdEnum.Other: {
