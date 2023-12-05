@@ -16,6 +16,7 @@ import { StorageService } from '@/services/storage_service';
 import { ShowAlert } from '@/services/alert_service';
 import { DataDetectorRepository } from '@/utils/data_detector_repository';
 import { CheckRecognizerResult, CheckRecognizerResultField, HealthInsuranceCardScannerResult } from 'capacitor-plugin-scanbot-sdk';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
@@ -36,7 +37,7 @@ const startEHICScanner = async () => {
     DataDetectorRepository.DataResult = JSON.stringify(ehicResult);
     parseResult(ehicResult!);
     await router.push('/ehic_result');
-    
+
 }
 
 const parseResult = (result: HealthInsuranceCardScannerResult) => {
@@ -61,6 +62,61 @@ const startCheckScanner = async () => {
     await router.push('/check_result');
 }
 
+const detectCheckFromImage = async () => {
+    try {
+        const image = await Camera.getPhoto({
+            resultType: CameraResultType.Uri,
+            source: CameraSource.Photos,
+        });
+
+        const originalImageFileUri = image.path!;
+
+        const result = await ScanbotSDKService.recognizeCheck(originalImageFileUri);
+        DataDetectorRepository.parseResult(result!);
+        await router.push('/check_result');
+
+    } catch (error) {
+        alert(JSON.stringify(error));
+    }
+}
+
+const startLicensePlateScaner = async () => {
+    try {
+        const licensePlateResult = await ScanbotSDKService.startLicensePlateScanner();
+        alert(JSON.stringify(licensePlateResult));
+    } catch (error) {
+        alert(JSON.stringify(error));
+    }
+}
+
+const startMedicalCertificateScanner = async () => {
+    try {
+        const medicalCertificateResult = await ScanbotSDKService.startMedicalCertificateRecognizer();
+        alert(JSON.stringify(medicalCertificateResult));
+
+    } catch (error) {
+        alert(JSON.stringify(error));
+    }
+}
+
+const startScanTextDataScaner = async () => {
+    try {
+        const textResult = await ScanbotSDKService.startTextDataScanner();
+        alert(JSON.stringify(textResult));
+    } catch (error) {
+        alert(JSON.stringify(error));
+    }
+}
+
+const startGenericDocumentScaner = async () => {
+    try {
+        const genericDocumentResult = await ScanbotSDKService.startGenericDocumentRecognizer();
+        alert(JSON.stringify(genericDocumentResult));
+    } catch (error) {
+        alert(JSON.stringify(error));
+    }
+}
+
 const onItemClick = async (selectedItem: CoreFeatureEnum) => {
     switch (selectedItem) {
         case CoreFeatureEnum.MRZ: {
@@ -73,6 +129,26 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
         }
         case CoreFeatureEnum.Check: {
             await startCheckScanner();
+            break;
+        }
+        case CoreFeatureEnum.ImportCheckOnImage: {
+            await detectCheckFromImage();
+            break;
+        }
+        case CoreFeatureEnum.LicensePlate: {
+            await startLicensePlateScaner();
+            break;
+        }
+        case CoreFeatureEnum.MedicalCertificate: {
+            await startMedicalCertificateScanner();
+            break;
+        }
+        case CoreFeatureEnum.TextData: {
+            await startScanTextDataScaner();
+            break;
+        }
+        case CoreFeatureEnum.GenericDocument: {
+            await startGenericDocumentScaner();
             break;
         }
         default: {

@@ -33,6 +33,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
       { key: CoreFeatureEnum.MRZ, value: "Scan MRZ" },
       { key: CoreFeatureEnum.EHIC, value: "Scan Health Insurance Card" },
       { key: CoreFeatureEnum.Check, value: "Scan Checks" },
+      { key: CoreFeatureEnum.ImportCheckOnImage, value: "Import Image & Detect Check" },
       { key: CoreFeatureEnum.LicensePlate, value: "Scan License Plate" },
       { key: CoreFeatureEnum.MedicalCertificate, value: "Scan Medical Certificate" },
       { key: CoreFeatureEnum.TextData, value: "Scan Text Data" },

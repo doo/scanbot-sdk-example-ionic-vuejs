@@ -8,6 +8,7 @@ export enum CoreFeatureEnum {
     MRZ,
     EHIC,
     Check,
+    ImportCheckOnImage,
     LicensePlate,
     TextData,
     MedicalCertificate,

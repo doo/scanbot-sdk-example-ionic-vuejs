@@ -63,6 +63,7 @@ const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
       break;
     }
     case CoreFeatureIdEnum.Other: {
+      await router.push('/more_feature/' + selectedItem);
       break;
     }
     default: {

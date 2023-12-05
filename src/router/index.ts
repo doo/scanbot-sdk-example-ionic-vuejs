@@ -10,6 +10,7 @@ import DataDetectorPage from '../views/features/data_detectors/DataDetectorPage.
 import MRZResultPage from '../views/features/data_detectors/MRZResultPage.vue';
 import EHICResultPage from '../views/features/data_detectors/EHICResultPage.vue';
 import CheckResultPage from '../views/features/data_detectors/CheckResultPage.vue';
+import MoreFeaturePage from '../views/features/other_api_features/MoreFeaturePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -65,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/check_result',
     name: 'CheckResultPage',
     component: CheckResultPage,
+  },
+  {
+    path: '/more_feature/:selectedItem',
+    name: 'MoreFeaturePage',
+    component: MoreFeaturePage,
   },
 ]
 

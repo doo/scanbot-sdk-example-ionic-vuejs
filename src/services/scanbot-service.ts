@@ -18,6 +18,7 @@ import {
   DocumentScannerResult,
   PDFPageSize,
   ImageFilterType,
+  GenericDocumentRecognizerConfiguration,
 } from "capacitor-plugin-scanbot-sdk";
 
 import { ErrorHandelingService } from "./error_handling_service";
@@ -328,7 +329,7 @@ export default class ScanbotService {
       // user has canceled the scanning operation
       return;
     }
-    alert(JSON.stringify(result));
+    return result;
   }
 
   public async startMedicalCertificateRecognizer() {
@@ -356,7 +357,28 @@ export default class ScanbotService {
       return;
     }
 
-    alert(JSON.stringify(result));
+    return result;
+  }
+
+  public async startGenericDocumentRecognizer() {
+    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
+    // if (!licenseCheckMethod()) {
+    //   return;
+    // }
+
+    const configuration: GenericDocumentRecognizerConfiguration = {
+      // Customize colors, text resources, behavior, etc..
+      //shouldSavePhotoImageInStorage: true,
+      // see further configs...
+    };
+    
+    const result = await ScanbotSDK.startGenericDocumentRecognizer(configuration);
+    
+    if (result.status === 'CANCELED') {
+      // user has canceled the scanning operation
+      return;
+    }
+    return result;
   }
 
   public async detectBarcodesOnImage(imageFileUri: string) {
@@ -389,15 +411,22 @@ export default class ScanbotService {
     return result;
   }
 
-  public async recognizeCheck() {
+  public async recognizeCheck(imageUrl: string) {
     // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
     // if (!licenseCheckMethod()) {
     //   return;
     // }
 
-    const result = await ScanbotSDK.recognizeCheck({
-      imageFileUri: "file:///some/image-file.jpg",
+    const checkResult = await ScanbotSDK.recognizeCheck({
+      imageFileUri: imageUrl,
     });
+
+    if (checkResult.status === "CANCELED") {
+      // user has canceled the scanning operation
+      return;
+    }
+
+    return checkResult;
   }
 
   public async performOCR() {
@@ -510,6 +539,28 @@ export default class ScanbotService {
     });
 
     alert(JSON.stringify(result));
+  }
+
+  // -------------------------
+  // SDK License Information
+  // -------------------------
+  public viewLicenseInfo = async () => {
+    const licenseInfo = await ScanbotSDK.getLicenseInfo();
+    return licenseInfo;
+  }
+
+  // -------------------------
+  // OCR Confoguaration
+  // -------------------------
+  public viewOcrConfigs = async () => {
+    try {
+      alert('start');
+      const ocrInfo = await ScanbotSDK.getOCRConfigs();
+      alert(JSON.stringify(ocrInfo));
+      return ocrInfo;
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
   }
 }
 
