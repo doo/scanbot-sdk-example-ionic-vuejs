@@ -24,16 +24,19 @@ onMounted(() => {
 });
 
 const startDocumentScanner = async () => {
-    const documentResult = await ScanbotSDKService.startDocumentScanner();
+    if (!await ScanbotSDKService.validateLicense()) return;
+    try {
+        const documentResult = await ScanbotSDKService.startDocumentScanner();
+        if (documentResult!.status == 'CANCELED') {
+            await ShowAlert('Information', 'Document scanner has been canceled.', ['OK']);
+            return;
+        };
+        await StorageService.INSTANCE.addPages(documentResult!.pages);
 
-    if (documentResult.status == 'CANCELED') {
-        await ShowAlert('Information', 'Document scanner has been canceled.', ['OK']);
-        return;
-    };
-
-    await StorageService.INSTANCE.addPages(documentResult.pages);
-
-    await router.push('/image_preview');
+        await router.push('/image_preview');
+    } catch (error) {
+        await ShowAlert('Scan Document Failed', JSON.stringify(error), ['OK']);
+    }
 }
 
 const onItemClick = async (selectedItem: CoreFeatureEnum) => {

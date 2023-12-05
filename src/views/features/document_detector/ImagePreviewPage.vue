@@ -90,12 +90,12 @@ async function reloadPages() {
 const startDocumentScanner = async () => {
     const documentResult = await ScanbotSDKService.startDocumentScanner();
 
-    if (documentResult.status == 'CANCELED') {
+    if (documentResult!.status == 'CANCELED') {
         await ShowAlert('Information', 'Document scanner has been canceled.', ['OK']);
         return;
     };
 
-    await StorageService.INSTANCE.addPages(documentResult.pages);
+    await StorageService.INSTANCE.addPages(documentResult!.pages);
 
     await reloadPages();
 }

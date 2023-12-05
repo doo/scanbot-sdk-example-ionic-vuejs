@@ -7,12 +7,14 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-card :button="true" color="secondary" v-for="coreitem in CORE_FEATURES" :key="coreitem.id"
-        @click="itemOnClick(coreitem['id'])">
+      <ion-card :button="true" v-for="coreitem in CORE_FEATURES" :key="coreitem.id" @click="itemOnClick(coreitem['id'])">
         <ion-card-header>
-          <ion-card-title>{{ coreitem.title }}</ion-card-title>
-          <ion-card-subtitle>{{ coreitem.description }}</ion-card-subtitle>
+          <ion-card-title style="font-size:20px">{{ coreitem.title }}</ion-card-title>
         </ion-card-header>
+
+        <ion-card-content>
+          {{ coreitem.description }}
+        </ion-card-content>
       </ion-card>
     </ion-content>
   </ion-page>
@@ -26,9 +28,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonCard, 
-  IonCardHeader, 
-  IonCardSubtitle, 
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
   IonCardTitle,
 } from "@ionic/vue";
 
@@ -40,7 +42,6 @@ import { CoreFeatureIdEnum } from "@/enums/core_feature_id_enum";
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-// The onMounted hook can be used to run code after the component has finished the initial rendering and created the DOM nodes.
 onMounted(() => {
   ScanbotSDKService.initSdk();
 });
@@ -51,15 +52,15 @@ onMounted(() => {
 const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
   switch (selectedItem) {
     case CoreFeatureIdEnum.DocumentDetector: {
-      await router.push('/document_scanner/'+ selectedItem);
+      await router.push('/document_scanner/' + selectedItem);
       break;
     }
     case CoreFeatureIdEnum.BarcodeDetactor: {
-      await router.push('/barcode_scanner/'+ selectedItem);
+      await router.push('/barcode_scanner/' + selectedItem);
       break;
     }
     case CoreFeatureIdEnum.DataDetactor: {
-      await router.push('/data_detector/'+ selectedItem);
+      await router.push('/data_detector/' + selectedItem);
       break;
     }
     case CoreFeatureIdEnum.Other: {
@@ -73,33 +74,3 @@ const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
   }
 };
 </script>
-
-<style scoped>
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-</style>

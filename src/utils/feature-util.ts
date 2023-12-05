@@ -8,7 +8,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
   {
     id: CoreFeatureIdEnum.DocumentDetector,
     title: "Document Scanner",
-    description: "test1",
+    description: "The Scanbot SDK provides a Ready-To-Use UI screen component for document scanning.",
     items: [
       { key: CoreFeatureEnum.Document, value: "Scan Document" },
       { key: CoreFeatureEnum.ImageResult, value: "View Image Results" },
@@ -17,7 +17,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
   {
     id: CoreFeatureIdEnum.BarcodeDetactor,
     title: "Barcode Scanner & Detector",
-    description: "test2",
+    description: "The Scanbot SDK provides a Ready-To-Use UI screen component for Barcode and QR-Code scanning.",
     items: [
       { key: CoreFeatureEnum.Barcode, value: "Scan QR-/Barcode" },
       { key: CoreFeatureEnum.BatchBarcode, value: "Scan Batch of Barcodes" },
@@ -28,7 +28,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
   {
     id: CoreFeatureIdEnum.DataDetactor,
     title: "Data Detectors",
-    description: "test3",
+    description: "The Scanbot SDK provides a Ready-To-Use UI screen component for detect data from MRZ, ID CARDS, EHIC, etc... ",
     items: [
       { key: CoreFeatureEnum.MRZ, value: "Scan MRZ" },
       { key: CoreFeatureEnum.EHIC, value: "Scan Health Insurance Card" },
@@ -43,7 +43,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
   {
     id: CoreFeatureIdEnum.Other,
     title: "Test Other SDK API Methods",
-    description: "test4",
+    description: "The Scanbot SDK provides more API methods.",
     items: [
       { key: CoreFeatureEnum.LicenseInfo, value: "View License Info" },
       { key: CoreFeatureEnum.OCRConfig, value: "View OCR Configs" },
@@ -75,7 +75,7 @@ export const FilterOptions = [
   { key: "ImageFilterTypeNone", value: 'None' },
   { key: 'ImageFilterTypeColor', value: 'Color Enhanced' },
   { key: "ImageFilterTypeGray", value: 'Gray Scale' },
-  { key: 'ImageFilterTypePureGray', value: 'Pure Gray' },  
+  { key: 'ImageFilterTypePureGray', value: 'Pure Gray' },
   { key: "ImageFilterTypeBinarized", value: 'Binarized' },
   { key: "ImageFilterTypeColorDocument", value: 'Color Document' },
   { key: "ImageFilterTypePureBinarized", value: 'Pure Binarized' },
