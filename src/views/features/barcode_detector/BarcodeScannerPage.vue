@@ -4,14 +4,15 @@
   
 <script setup lang="ts">
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { onIonViewWillEnter } from '@ionic/vue';
 
+import { ScanbotSDKService } from '@/services/scanbot-service';
+import { ShowAlert } from '@/services/alert_service';
 import { getItemList } from '../../../utils/feature-util';
 import { CoreFeatureIdEnum } from '@/enums/core_feature_id_enum';
 import { CoreFeatureEnum } from '@/enums/core_feature_enum';
 import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
-import { ScanbotSDKService } from '@/services/scanbot-service';
 import { BarcodeRepository } from '@/utils/barcode_repository';
 import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
 
@@ -19,21 +20,48 @@ const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
 const selectedItemId = router.currentRoute.value.params.selectedItem as unknown as CoreFeatureIdEnum;
 
-onMounted(() => {
+onIonViewWillEnter(() => {
     coreItems = getItemList(selectedItemId);
 });
 
+/** Scan barcodes */
 const startBarcodeScanner = async () => {
-    const barcodeResult = await ScanbotSDKService.startBarcodeScanner();
-    await navigateToBarcodeResultPage(barcodeResult?.barcodes!);
+    if (!(await ScanbotSDKService.validateLicense())) { return; }
+
+    try {
+        const barcodeResult = await ScanbotSDKService.startBarcodeScanner();
+        if (barcodeResult!.status == 'CANCELED') {
+            await ShowAlert('Information', 'Barcode Scanner has been cancelled.', ['OK']);
+            return;
+        };
+        await navigateToBarcodeResultPage(barcodeResult?.barcodes!);
+    }
+    catch (error) {
+        await ShowAlert('Scan barcodes Failed', JSON.stringify(error), ['OK']);
+    }
 }
 
+/** Scan batch barcodes */
 const startBatchBarcodeScanner = async () => {
-    const batchBarcodeResult = await ScanbotSDKService.startBatchBarcodeScanner();
-    await navigateToBarcodeResultPage(batchBarcodeResult?.barcodes!);
+    if (!(await ScanbotSDKService.validateLicense())) { return; }
+
+    try {
+        const batchBarcodeResult = await ScanbotSDKService.startBatchBarcodeScanner();
+        if (batchBarcodeResult!.status == 'CANCELED') {
+            await ShowAlert('Information', 'Batch Barcode Scanner has been cancelled.', ['OK']);
+            return;
+        };
+        await navigateToBarcodeResultPage(batchBarcodeResult?.barcodes!);
+    }
+    catch (error) {
+        await ShowAlert('Scan barcodes Failed', JSON.stringify(error), ['OK']);
+    }
 }
 
+/** Detect barcodes from a imported image */
 const detectBarcodesFromImage = async () => {
+    if (!(await ScanbotSDKService.validateLicense())) { return; }
+
     try {
         const image = await Camera.getPhoto({
             resultType: CameraResultType.Uri,
@@ -42,15 +70,23 @@ const detectBarcodesFromImage = async () => {
 
         const originalImageFileUri = image.path!;
 
-        const result = await ScanbotSDKService.detectBarcodesOnImage(originalImageFileUri);
+        const detectedBarcodesResult = await ScanbotSDKService.detectBarcodesOnImage(originalImageFileUri);
+        if (detectedBarcodesResult!.status == 'CANCELED') {
+            await ShowAlert('Information', 'Barcode detector has been cancelled.', ['OK']);
+            return;
+        };
 
-        await navigateToBarcodeResultPage(result!.barcodes);
-    } catch (error) {
-        alert(JSON.stringify(error));
+        await navigateToBarcodeResultPage(detectedBarcodesResult!.barcodes);
+    }
+    catch (error) {
+        await ShowAlert('Detect Barcodes Failed', JSON.stringify(error), ['OK']);
     }
 }
 
+/** Detect barcodes from imported images */
 const detectBarcodeFromImages = async () => {
+    if (!(await ScanbotSDKService.validateLicense())) { return; }
+
     try {
         const barcodes: BarcodeResultField[] = [];
         const originalImageFileUrls: string[] = [];
@@ -62,25 +98,39 @@ const detectBarcodeFromImages = async () => {
             originalImageFileUrls.push(photo.path!);
         });
 
-        const result = await ScanbotSDKService.detectBarcodesOnImages(originalImageFileUrls);
+        const detectedBarcodesResult = await ScanbotSDKService.detectBarcodesOnImages(originalImageFileUrls);
+        if (detectedBarcodesResult!.status == 'CANCELED') {
+            await ShowAlert('Information', 'Barcode detector has been cancelled.', ['OK']);
+            return;
+        };
 
-        result?.results!.forEach(element => {
+        detectedBarcodesResult?.results!.forEach(element => {
             element.barcodeResults.forEach(barcode => {
                 barcodes.push(barcode);
             });
         });
 
         await navigateToBarcodeResultPage(barcodes);
-    } catch (error) {
-
+    }
+    catch (error) {
+        await ShowAlert('Detect Barcodes Failed', JSON.stringify(error), ['OK']);
     }
 }
 
+/** Navigate to barcode result page */
 const navigateToBarcodeResultPage = async (barcodes: BarcodeResultField[]) => {
-    await BarcodeRepository.addBarcodes(barcodes);
-    await router.push('/barcode_result');
+    try {
+        await BarcodeRepository.addBarcodes(barcodes);
+        await router.push('/barcode_result');
+    } 
+    catch (error) {
+        await ShowAlert('Navigate to barcode result page Failed', JSON.stringify(error), ['OK']);
+    }
 }
 
+// -----------------
+// Item Click Event
+// -----------------
 const onItemClick = async (selectedItem: CoreFeatureEnum) => {
     switch (selectedItem) {
         case CoreFeatureEnum.Barcode: {

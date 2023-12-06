@@ -44,7 +44,7 @@ export default class ScanbotService {
   // -------------------------
   // Initialize Scanbot SDK
   // -------------------------
-  public async initSdk() {
+  public initSdk = async () => {
     const configuration: ScanbotSdkConfiguration = {
       allowGpuAcceleration: true,
       allowXnnpackAcceleration: true,
@@ -66,7 +66,7 @@ export default class ScanbotService {
   // -------------------------
   // Validate license
   // -------------------------
-  public async validateLicense() {
+  public validateLicense = async () => {
     const result = await ErrorHandelingService<GetLicenseInfoResult>(() => ScanbotSDK.getLicenseInfo());
     if (result?.isLicenseValid) {
       // OK - we have a trial session, a valid trial license or valid production license.
@@ -98,7 +98,7 @@ export default class ScanbotService {
   // ----------------
   // Cropping Screen
   // ----------------
-  public async startCroppingScreen(page: Page) {
+  public startCroppingScreen = async (page: Page) => {
     const configuration: CroppingConfiguration = {
       // Pass your scanned page here:
       //page: scannedPage,
@@ -115,12 +115,10 @@ export default class ScanbotService {
     });
   }
 
-  public async startBarcodeScanner() {
-    // // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
+  // ----------------
+  // Barcode Scanner
+  // ----------------
+  public startBarcodeScanner = async () => {
     const configuration: BarcodeScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       finderTextHint:
@@ -148,29 +146,13 @@ export default class ScanbotService {
       //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
       // see further configs ...
     };
-
-    try {
-      const barcodeResult = await ScanbotSDK.startBarcodeScanner(configuration);
-
-      if (barcodeResult.status === "CANCELED") {
-        // user has canceled the scanning operation
-        return;
-      }
-
-      return barcodeResult;
-    } catch (error) {
-      console.error(error);
-    }
-
-
+    return await ScanbotSDK.startBarcodeScanner(configuration);
   }
 
+  // ----------------------
+  // Batch Barcode Scanner
+  // ----------------------
   public async startBatchBarcodeScanner() {
-    // // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
     const configuration: BatchBarcodeScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       finderTextHint:
@@ -198,14 +180,29 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const batchBarcodeResult = await ScanbotSDK.startBatchBarcodeScanner(configuration);
+    return await ScanbotSDK.startBatchBarcodeScanner(configuration);
+  }
 
-    if (batchBarcodeResult.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
+  // --------------------------------------
+  // Detect barcodes from a imported image
+  // --------------------------------------
+  public detectBarcodesOnImage = async (imageFileUri: string) => {
+    return await ScanbotSDK.detectBarcodesOnImage({
+      imageFileUri: imageFileUri,
+      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
+      // see further args...
+    });
+  }
 
-    return batchBarcodeResult;
+  // -------------------------------------
+  // Detect barcodes from imported images
+  // -------------------------------------
+  public async detectBarcodesOnImages(imageFilesUris: string[]) {
+    return await ScanbotSDK.detectBarcodesOnImages({
+      imageFileUris: imageFilesUris,
+      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
+      // see further args...
+    });
   }
 
   public async startMrzScanner() {
@@ -385,36 +382,6 @@ export default class ScanbotService {
       // user has canceled the scanning operation
       return;
     }
-    return result;
-  }
-
-  public async detectBarcodesOnImage(imageFileUri: string) {
-    const result = await ScanbotSDK.detectBarcodesOnImage({
-      imageFileUri: imageFileUri,
-      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
-      // see further args...
-    });
-
-    if (result.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-
-    return result;
-  }
-
-  public async detectBarcodesOnImages(imageFilesUris: string[]) {
-    const result = await ScanbotSDK.detectBarcodesOnImages({
-      imageFileUris: imageFilesUris,
-      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
-      // see further args...
-    });
-
-    if (result.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-
     return result;
   }
 

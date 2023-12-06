@@ -31,8 +31,8 @@
   
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonImg, IonCard, onIonViewWillEnter } from '@ionic/vue';
+import { ref } from 'vue';
 import { ImageFilterType, Page } from 'capacitor-plugin-scanbot-sdk';
-import { onMounted, ref } from 'vue';
 
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { StorageService } from '@/services/storage_service';
