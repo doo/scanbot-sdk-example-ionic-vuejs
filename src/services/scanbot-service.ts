@@ -76,9 +76,9 @@ export default class ScanbotService {
     return false;
   }
 
-  // -------------------------
+  // -----------------
   // Document Scanner
-  // -------------------------
+  // -----------------
   public startDocumentScanner = async () => {
     const configuration: DocumentScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
@@ -95,12 +95,10 @@ export default class ScanbotService {
     return ScanbotSDK.startDocumentScanner(configuration);
   }
 
+  // ----------------
+  // Cropping Screen
+  // ----------------
   public async startCroppingScreen(page: Page) {
-    // Always make sure you have a valid license on runtime via SDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
     const configuration: CroppingConfiguration = {
       // Pass your scanned page here:
       //page: scannedPage,

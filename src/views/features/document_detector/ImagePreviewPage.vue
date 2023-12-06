@@ -75,6 +75,8 @@ onIonViewWillEnter(async () => {
 // Item Click Event
 // -----------------
 const onItemClick = async (selectedPageId: string) => {
+    if (!(await ScanbotSDKService.validateLicense())) { return; }
+    
     await router.push('/image_edit/' + selectedPageId);
 }
 
