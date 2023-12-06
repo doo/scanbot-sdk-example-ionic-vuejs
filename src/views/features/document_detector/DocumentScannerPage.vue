@@ -34,7 +34,8 @@ const startDocumentScanner = async () => {
         await StorageService.INSTANCE.addPages(documentResult!.pages);
 
         await router.push('/image_preview');
-    } catch (error) {
+    } 
+    catch (error) {
         await ShowAlert('Scan Document Failed', JSON.stringify(error), ['OK']);
     }
 }
@@ -46,6 +47,7 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
             break;
         }
         case CoreFeatureEnum.ImageResult: {
+            if (!await ScanbotSDKService.validateLicense()) return;
             await router.push('/image_preview');
             break;
         }

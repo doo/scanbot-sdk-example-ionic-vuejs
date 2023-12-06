@@ -8,8 +8,8 @@
                 <ion-title>{{ props.title }}</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content>
-            <ion-list>
+        <ion-content color="light">
+            <ion-list :inset="true">
                 <ion-item :button="true" v-for="item in props.coreItems" :key="item['key']" @click="onItemClick(item['key'])">
                     <ion-label> {{ item["value"] }} </ion-label>
                 </ion-item>

@@ -46,9 +46,9 @@ onMounted(() => {
   ScanbotSDKService.initSdk();
 });
 
-// -------------------------
+// -----------------
 // Item Click Event
-// -------------------------
+// -----------------
 const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
   switch (selectedItem) {
     case CoreFeatureIdEnum.DocumentDetector: {

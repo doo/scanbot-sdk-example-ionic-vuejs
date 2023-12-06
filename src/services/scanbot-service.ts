@@ -41,6 +41,9 @@ export default class ScanbotService {
   // If USE_CUSTOM_STORAGE is true, this will be the name of the base directory.
   private readonly CUSTOM_STORAGE_NAME = "my-demo-custom-storage";
 
+  // -------------------------
+  // Initialize Scanbot SDK
+  // -------------------------
   public async initSdk() {
     const configuration: ScanbotSdkConfiguration = {
       allowGpuAcceleration: true,
@@ -52,11 +55,17 @@ export default class ScanbotService {
     // 	configuration.storageBaseDirectory = await this.getStorageBaseDirectory();
     // 	console.log("Changed Storage Base Directory to " + configuration.storageBaseDirectory);
     // }
-
-    const result = await ErrorHandelingService<InitializeSDKResult>(() => ScanbotSDK.initializeSDK(configuration));
-    console.log(JSON.stringify(result));
+    try {
+      const result = ScanbotSDK.initializeSDK(configuration);
+      console.log(JSON.stringify(result));
+    } catch (error) {
+      ShowAlert('Initialization Failed', JSON.stringify(error), ['OK']);
+    }
   }
 
+  // -------------------------
+  // Validate license
+  // -------------------------
   public async validateLicense() {
     const result = await ErrorHandelingService<GetLicenseInfoResult>(() => ScanbotSDK.getLicenseInfo());
     if (result?.isLicenseValid) {
@@ -67,9 +76,10 @@ export default class ScanbotService {
     return false;
   }
 
-  public startDocumentScanner = async (): Promise<DocumentScannerResult> => {
-    //if (!this.validateLicense()) return;
-
+  // -------------------------
+  // Document Scanner
+  // -------------------------
+  public startDocumentScanner = async () => {
     const configuration: DocumentScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       cameraPreviewMode: "FIT_IN",
@@ -82,8 +92,7 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const documentScannerResult = await ErrorHandelingService<DocumentScannerResult>(() => ScanbotSDK.startDocumentScanner(configuration));
-    return documentScannerResult!;
+    return ScanbotSDK.startDocumentScanner(configuration);
   }
 
   public async startCroppingScreen(page: Page) {
@@ -444,12 +453,10 @@ export default class ScanbotService {
     });
   }
 
+  // -------------------------
+  // Convert Image URL
+  // -------------------------
   public async getImageData(imageFileUri: string) {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
     // Use the low-res image file "documentPreviewImageFileUri" of a Page for the preview:
     const result = await ScanbotSDK.getImageData({
       imageFileUri: imageFileUri,
@@ -509,27 +516,21 @@ export default class ScanbotService {
     }
   }
 
+  // ---------------------
+  // PDF Create Feature
+  // ---------------------
   public async createPDF(urls: string[], pageSize: PDFPageSize) {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
-    const result = await ScanbotSDK.createPDF({
+    return await ScanbotSDK.createPDF({
       imageFileUris: urls,
       pageSize: pageSize,
     });
-
-    alert(JSON.stringify(result));
   }
 
+  // ---------------------
+  // TIFF Create Feature
+  // ---------------------
   public async writeTIFF(urls: string[], binarized: boolean) {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
-    const result = await ScanbotSDK.writeTIFF({
+    return await ScanbotSDK.writeTIFF({
       imageFileUris: urls,
       options: {
         oneBitEncoded: binarized,
@@ -537,8 +538,6 @@ export default class ScanbotService {
         compression: binarized ? 'CCITT_T6' : 'ADOBE_DEFLATE',
       },
     });
-
-    alert(JSON.stringify(result));
   }
 
   // -------------------------
