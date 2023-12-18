@@ -3,8 +3,8 @@
 </template>
   
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { onIonViewWillEnter } from '@ionic/vue';
 
 import { getItemList } from '../../../utils/feature-util';
 import { CoreFeatureIdEnum } from '@/enums/core_feature_id_enum';
@@ -14,9 +14,8 @@ import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { DataDetectorRepository } from '@/utils/data_detector_repository';
 import { HealthInsuranceCardScannerResult } from 'capacitor-plugin-scanbot-sdk';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { onIonViewWillEnter } from '@ionic/vue';
 import { ShowAlert } from '@/services/alert_service';
+import { PickImage } from '@/utils/camera_util';
 
 const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
@@ -98,12 +97,7 @@ const detectCheckFromImage = async () => {
     if (!(await ScanbotSDKService.validateLicense())) { return; }
 
     try {
-        const image = await Camera.getPhoto({
-            resultType: CameraResultType.Uri,
-            source: CameraSource.Photos,
-        });
-
-        const originalImageFileUri = image.path!;
+        const originalImageFileUri = await PickImage();
 
         const checkResult = await ScanbotSDKService.recognizeCheck(originalImageFileUri);
         if (checkResult!.status == 'CANCELED') {

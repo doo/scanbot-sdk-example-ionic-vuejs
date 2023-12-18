@@ -3,9 +3,9 @@
 </template>
   
 <script setup lang="ts">
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { useRouter } from 'vue-router';
 import { onIonViewWillEnter } from '@ionic/vue';
+import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
 
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { ShowAlert } from '@/services/alert_service';
@@ -14,7 +14,7 @@ import { CoreFeatureIdEnum } from '@/enums/core_feature_id_enum';
 import { CoreFeatureEnum } from '@/enums/core_feature_enum';
 import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
 import { BarcodeRepository } from '@/utils/barcode_repository';
-import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
+import { PickImage, PickImages } from '@/utils/camera_util';
 
 const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
@@ -63,12 +63,7 @@ const detectBarcodesFromImage = async () => {
     if (!(await ScanbotSDKService.validateLicense())) { return; }
 
     try {
-        const image = await Camera.getPhoto({
-            resultType: CameraResultType.Uri,
-            source: CameraSource.Photos,
-        });
-
-        const originalImageFileUri = image.path!;
+        const originalImageFileUri = await PickImage();
 
         const detectedBarcodesResult = await ScanbotSDKService.detectBarcodesOnImage(originalImageFileUri);
         if (detectedBarcodesResult!.status == 'CANCELED') {
@@ -90,11 +85,9 @@ const detectBarcodeFromImages = async () => {
     try {
         const barcodes: BarcodeResultField[] = [];
         const originalImageFileUrls: string[] = [];
-        const pickedImageResults = await Camera.pickImages({
-            quality: 80,
-        });
+        const pickedPhotos = await PickImages();
 
-        pickedImageResults.photos.forEach(photo => {
+        pickedPhotos.forEach(photo => {
             originalImageFileUrls.push(photo.path!);
         });
 
