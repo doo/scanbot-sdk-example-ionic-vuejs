@@ -11,6 +11,7 @@ import MRZResultPage from '../views/features/data_detectors/MRZResultPage.vue';
 import EHICResultPage from '../views/features/data_detectors/EHICResultPage.vue';
 import CheckResultPage from '../views/features/data_detectors/CheckResultPage.vue';
 import MoreFeaturePage from '../views/features/other_api_features/MoreFeaturePage.vue';
+import MedicalCertificateResultPage from '../views/features/data_detectors/MedicalCertificateResultPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -71,6 +72,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/more_feature/:selectedItem',
     name: 'MoreFeaturePage',
     component: MoreFeaturePage,
+  },
+  {
+    path: '/medical_certificate',
+    name: 'MedicalCertificateResultPage',
+    component: MedicalCertificateResultPage,
   },
 ]
 

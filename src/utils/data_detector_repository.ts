@@ -1,12 +1,14 @@
-import { CheckRecognizerResult, CheckRecognizerResultField, MrzResult } from "capacitor-plugin-scanbot-sdk";
+import { CheckRecognizerResult, CheckRecognizerResultField, MedicalCertificateScannerResult, MrzResult } from "capacitor-plugin-scanbot-sdk";
 
 export class DataDetectorRepository {
     public static DataResult: string = '';
 
+    public static MedResult: MedicalCertificateScannerResult;
+
     public static EHICResult: { name: string; value: string; }[] = [];
     public static CheckResult: { name: string; value: string; }[] = [];
 
-    public static parseResult = (result: CheckRecognizerResult) => {
+    public static GenerateCheckResult = (result: CheckRecognizerResult) => {
         const newFields: { name: string, value: string }[] = []
         Object.keys(result.fields).forEach((field) => {
             const checkField = (result.fields as any)[field] as CheckRecognizerResultField;

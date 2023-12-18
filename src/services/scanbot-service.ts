@@ -152,7 +152,7 @@ export default class ScanbotService {
   // ----------------------
   // Batch Barcode Scanner
   // ----------------------
-  public async startBatchBarcodeScanner() {
+  public startBatchBarcodeScanner = async () => {
     const configuration: BatchBarcodeScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       finderTextHint:
@@ -205,12 +205,10 @@ export default class ScanbotService {
     });
   }
 
-  public async startMrzScanner() {
-    // Always make sure you have a valid license on runtime via SDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
+  // ----------------
+  // Detect MRZ data
+  // ----------------
+  public startMrzScanner = async () => {
     const configuration: MrzScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       finderTextHint:
@@ -219,21 +217,13 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const mrzResult: MrzResult = await ScanbotSDK.startMrzScanner(configuration);
-
-    if (mrzResult.status === "CANCELED") {
-      // User has canceled the scanning operation
-      return;
-    }
-    return mrzResult;
+    return await ScanbotSDK.startMrzScanner(configuration);
   }
 
-  public async startEHICScanner() {
-    // Always make sure you have a valid license on runtime via SDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
+  // -----------------
+  // Detect EHIC data
+  // -----------------
+  public startEHICScanner = async () => {
     const configuration: HealthInsuranceCardScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       finderTextHint:
@@ -242,21 +232,13 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const ehicResult = await ScanbotSDK.startEHICScanner(configuration);
-
-    if (ehicResult.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-    return ehicResult;
+    return await ScanbotSDK.startEHICScanner(configuration);
   }
 
-  public async startCheckRecognizer() {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
+  // -------------------------
+  // Detect data from a check
+  // -------------------------
+  public startCheckRecognizer = async () => {
     const configuration: CheckRecognizerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       enableCameraButtonTitle: "Enable Camera",
@@ -265,22 +247,41 @@ export default class ScanbotService {
       // see further configs ...
     };
 
-    const checkResult = await ScanbotSDK.startCheckRecognizer(configuration);
-
-    if (checkResult.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-
-    return checkResult;
+    return await ScanbotSDK.startCheckRecognizer(configuration);
   }
 
-  public async startTextDataScanner() {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
+  // --------------------------------------
+  // Detect check data from imported image
+  // --------------------------------------
+  public recognizeCheck = async (imageUrl: string) => {
+    return await ScanbotSDK.recognizeCheck({
+      imageFileUri: imageUrl,
+    });
+  }
 
+  // --------------------------------
+  // Detect medical certificate data
+  // --------------------------------
+  public startMedicalCertificateRecognizer = async () => {
+    const configuration: MedicalCertificateRecognizerConfiguration = {
+      // Customize colors, text resources, behavior, etc..
+      topBarBackgroundColor: "#c8193c",
+      cancelButtonTitle: "Cancel",
+      finderLineColor: "#c8193c",
+      finderLineWidth: 5,
+      orientationLockMode: "PORTRAIT",
+      // see further configs...
+    };
+
+    return await ScanbotSDK.startMedicalCertificateRecognizer(
+      configuration
+    );
+  }
+
+  // -----------------
+  // Detect text data
+  // -----------------
+  public startTextDataScanner = async () => {
     const configuration: TextDataScannerConfiguration = {
       textDataScannerStep: {
         allowedSymbols: "",
@@ -299,21 +300,13 @@ export default class ScanbotService {
       // Other UI configs...
     };
 
-    const result = await ScanbotSDK.startTextDataScanner(configuration);
-
-    if (result.status === "CANCELED") {
-      return;
-    }
-
-    alert(JSON.stringify(result));
+    return await ScanbotSDK.startTextDataScanner(configuration);
   }
 
-  public async startLicensePlateScanner() {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
+  // --------------------------
+  // Detect license plate data
+  // --------------------------
+  public startLicensePlateScanner = async () => {
     const configuration: LicensePlateScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       scanStrategy: "MlBased",
@@ -327,80 +320,20 @@ export default class ScanbotService {
       // see further configs...
     };
 
-    const result = await ScanbotSDK.startLicensePlateScanner(configuration);
-
-    if (result.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-    return result;
+    return await ScanbotSDK.startLicensePlateScanner(configuration);
   }
 
-  public async startMedicalCertificateRecognizer() {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
-    const configuration: MedicalCertificateRecognizerConfiguration = {
-      // Customize colors, text resources, behavior, etc..
-      topBarBackgroundColor: "#c8193c",
-      cancelButtonTitle: "Cancel",
-      finderLineColor: "#c8193c",
-      finderLineWidth: 5,
-      orientationLockMode: "PORTRAIT",
-      // see further configs...
-    };
-
-    const result = await ScanbotSDK.startMedicalCertificateRecognizer(
-      configuration
-    );
-
-    if (result.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-
-    return result;
-  }
-
-  public async startGenericDocumentRecognizer() {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
+  // -------------------------
+  // Generic Document Scanner
+  // -------------------------
+  public startGenericDocumentRecognizer = async () => {
     const configuration: GenericDocumentRecognizerConfiguration = {
       // Customize colors, text resources, behavior, etc..
       //shouldSavePhotoImageInStorage: true,
       // see further configs...
     };
-    
-    const result = await ScanbotSDK.startGenericDocumentRecognizer(configuration);
-    
-    if (result.status === 'CANCELED') {
-      // user has canceled the scanning operation
-      return;
-    }
-    return result;
-  }
 
-  public async recognizeCheck(imageUrl: string) {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
-    const checkResult = await ScanbotSDK.recognizeCheck({
-      imageFileUri: imageUrl,
-    });
-
-    if (checkResult.status === "CANCELED") {
-      // user has canceled the scanning operation
-      return;
-    }
-
-    return checkResult;
+    return await ScanbotSDK.startGenericDocumentRecognizer(configuration);
   }
 
   public async performOCR() {
@@ -418,10 +351,10 @@ export default class ScanbotService {
     });
   }
 
-  // -------------------------
+  // ------------------
   // Convert Image URL
-  // -------------------------
-  public async getImageData(imageFileUri: string) {
+  // ------------------
+  public getImageData = async (imageFileUri: string) => {
     // Use the low-res image file "documentPreviewImageFileUri" of a Page for the preview:
     const result = await ScanbotSDK.getImageData({
       imageFileUri: imageFileUri,
@@ -430,56 +363,55 @@ export default class ScanbotService {
     return `data:image/jpeg;base64,${result.base64ImageData}`;
   }
 
-  public async applyImageFilterOnImage(imageUrl: string, imageFilter: ImageFilterType) {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
+  // public async applyImageFilterOnImage(imageUrl: string, imageFilter: ImageFilterType) {
+  //   // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
+  //   // if (!licenseCheckMethod()) {
+  //   //   return;
+  //   // }
 
-    return await ScanbotSDK.applyImageFilter({
-      imageFileUri: imageUrl,
-      filter: imageFilter, // See available filters below
-    });
+  //   return await ScanbotSDK.applyImageFilter({
+  //     imageFileUri: imageUrl,
+  //     filter: imageFilter, // See available filters below
+  //   });
 
 
-  }
+  // }
 
-  public async applyImageFilterOnPage(scannedPage: Page, imageFilter: ImageFilterType) {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
+  // ----------------------------------
+  // Apply filter for a selected image
+  // ----------------------------------
+  public applyImageFilterOnPage = async (scannedPage: Page, imageFilter: ImageFilterType) => {
     return await ScanbotSDK.applyImageFilterOnPage({
       page: scannedPage,
       filter: imageFilter,
     });
   }
 
-  public async getFilteredDocumentPreviewUri(scannedPage: Page) {
-    const result = await ScanbotSDK.getFilteredDocumentPreviewUri({
-      page: scannedPage,
-      filter: "ImageFilterTypeLowLightBinarization2", // See available filters above
-    });
+  // public async getFilteredDocumentPreviewUri(scannedPage: Page) {
+  //   const result = await ScanbotSDK.getFilteredDocumentPreviewUri({
+  //     page: scannedPage,
+  //     filter: "ImageFilterTypeLowLightBinarization2", // See available filters above
+  //   });
 
-    // use the imageFileUri from result to show a preview image of an image filter
-    const filteredPreviewImageUri = result.filteredDocumentPreviewUri;
-  }
+  //   // use the imageFileUri from result to show a preview image of an image filter
+  //   const filteredPreviewImageUri = result.filteredDocumentPreviewUri;
+  // }
 
-  public async estimateBlur() {
-    // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
+  // public async estimateBlur() {
+  //   // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
+  //   // if (!licenseCheckMethod()) {
+  //   //   return;
+  //   // }
 
-    const result = await ScanbotSDK.estimateBlur({
-      imageFileUri: "",
-    });
+  //   const result = await ScanbotSDK.estimateBlur({
+  //     imageFileUri: "",
+  //   });
 
-    // Check the blurriness value, e.g.
-    if (result.blur > 0.6) {
-      alert("This scanned image looks blurry. Consider rescanning it.");
-    }
-  }
+  //   // Check the blurriness value, e.g.
+  //   if (result.blur > 0.6) {
+  //     alert("This scanned image looks blurry. Consider rescanning it.");
+  //   }
+  // }
 
   // ---------------------
   // PDF Create Feature
@@ -518,9 +450,7 @@ export default class ScanbotService {
   // -------------------------
   public viewOcrConfigs = async () => {
     try {
-      alert('start');
       const ocrInfo = await ScanbotSDK.getOCRConfigs();
-      alert(JSON.stringify(ocrInfo));
       return ocrInfo;
     } catch (error) {
       alert(JSON.stringify(error));
