@@ -141,8 +141,6 @@ const startMedicalCertificateScanner = async () => {
             return;
         };
         DataDetectorRepository.MedResult = medicalCertificateResult;
-        DataDetectorRepository.DataResult = JSON.stringify(medicalCertificateResult);
-        console.log(JSON.stringify(medicalCertificateResult));
         await router.push('/medical_certificate');
     } 
     catch (error) {
