@@ -1,5 +1,6 @@
 export enum CoreFeatureEnum {
     Document,
+    FinderDocument,
     ImageResult,
     Barcode,
     BatchBarcode,

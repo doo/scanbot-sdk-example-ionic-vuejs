@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+
 import HomePage from '@/views/HomePage.vue';
 import ImagePreviewPage from '@/views/features/document_detector/ImagePreviewPage.vue';
-import DocumentScannerPage from '../views/features/document_detector/DocumentScannerPage.vue';
-import BarcodeScannerPage from '../views/features/barcode_detector/BarcodeScannerPage.vue';
+import DocumentScannerPage from '@/views/features/document_detector/DocumentScannerPage.vue';
+import BarcodeScannerPage from '@/views/features/barcode_detector/BarcodeScannerPage.vue';
 import ImageEditPage from '@/views/features/document_detector/ImageEditPage.vue';
-import BarcodeResultPage from '../views/features/barcode_detector/BarcodeResultPage.vue';
+import BarcodeResultPage from '@/views/features/barcode_detector/BarcodeResultPage.vue';
 import DataDetectorPage from '../views/features/data_detectors/DataDetectorPage.vue';
 import MRZResultPage from '../views/features/data_detectors/MRZResultPage.vue';
 import EHICResultPage from '../views/features/data_detectors/EHICResultPage.vue';

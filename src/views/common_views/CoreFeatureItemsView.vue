@@ -10,7 +10,7 @@
         </ion-header>
         <ion-content color="light">
             <ion-list :inset="true">
-                <ion-item :button="true" v-for="item in props.coreItems" :key="item['key']" @click="onItemClick(item['key'])">
+                <ion-item :detail="false" :button="true" v-for="item in props.coreItems" :key="item['key']" @click="onItemClick(item['key'])">
                     <ion-label> {{ item["value"] }} </ion-label>
                 </ion-item>
             </ion-list>

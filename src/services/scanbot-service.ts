@@ -5,7 +5,6 @@ import {
   BarcodeScannerConfiguration,
   BatchBarcodeScannerConfiguration,
   MrzScannerConfiguration,
-  MrzResult,
   HealthInsuranceCardScannerConfiguration,
   CheckRecognizerConfiguration,
   TextDataScannerConfiguration,
@@ -13,15 +12,12 @@ import {
   MedicalCertificateRecognizerConfiguration,
   CroppingConfiguration,
   Page,
-  InitializeSDKResult,
-  GetLicenseInfoResult,
-  DocumentScannerResult,
   PDFPageSize,
   ImageFilterType,
   GenericDocumentRecognizerConfiguration,
+  FinderDocumentScannerConfiguration,
 } from "capacitor-plugin-scanbot-sdk";
 
-import { ErrorHandelingService } from "./error_handling_service";
 import { ShowAlert } from "./alert_service";
 
 export default class ScanbotService {
@@ -67,13 +63,19 @@ export default class ScanbotService {
   // Validate license
   // -------------------------
   public validateLicense = async () => {
-    const result = await ErrorHandelingService<GetLicenseInfoResult>(() => ScanbotSDK.getLicenseInfo());
-    if (result?.isLicenseValid) {
-      // OK - we have a trial session, a valid trial license or valid production license.
-      return true;
+    try {
+      const result = await ScanbotSDK.getLicenseInfo();
+      if (result?.isLicenseValid) {
+        // OK - we have a trial session, a valid trial license or valid production license.
+        return true;
+      }
+      alert('Scanbot SDK (trial) license has expired!');
+      return false;
+    } 
+    catch (error) {
+      ShowAlert('License Validation Failed', JSON.stringify(error), ['OK']);
+      return false;
     }
-    alert('Scanbot SDK (trial) license has expired!');
-    return false;
   }
 
   // -----------------
@@ -91,8 +93,23 @@ export default class ScanbotService {
       bottomBarBackgroundColor: "#c8193c",
       // see further configs ...
     };
-
     return ScanbotSDK.startDocumentScanner(configuration);
+  }
+
+  // ------------------------
+  // Finder Document Scanner
+  // ------------------------
+  public startFinderDocumentScanner = async () => {
+    const configuration: FinderDocumentScannerConfiguration = {
+      // Customize colors, text resources, behavior, etc..
+      cameraPreviewMode: 'FILL_IN',
+      orientationLockMode: 'PORTRAIT',
+      ignoreBadAspectRatio: true,
+      topBarBackgroundColor: '#c8193c',
+      finderEnabled: true,
+      // see further configs ...
+    };
+    return await ScanbotSDK.startFinderDocumentScanner(configuration);
   }
 
   // ----------------
@@ -159,23 +176,23 @@ export default class ScanbotService {
         "Please align the barcode or QR code in the frame above to scan it.",
       orientationLockMode: "PORTRAIT",
       finderLineColor: "#0000ff",
-      overlayConfiguration: {
-        overlayEnabled: true,
-        automaticSelectionEnabled: false,
-        textFormat: "CODE_AND_TYPE",
-        /** The color of the polygon in the selection overlay. */
-        polygonColor: "#0000ff",
-        /** The color of the text in the selection overlay. */
-        textColor: "#000fff",
-        /** The color of the texts background in the selection overlay. */
-        textContainerColor: "#00ffff",
-        /** The color of the polygon in the selection overlay, when highlighted. */
-        highlightedPolygonColor: "#42f566",
-        /** The color of the text in the selection overlay, when highlighted. */
-        highlightedTextColor: "#42f566",
-        /** The color of the texts background in the selection overlay, when highlighted. */
-        highlightedTextContainerColor: "#f5bf42",
-      },
+      // overlayConfiguration: {
+      //   overlayEnabled: true,
+      //   automaticSelectionEnabled: false,
+      //   textFormat: "CODE_AND_TYPE",
+      //   /** The color of the polygon in the selection overlay. */
+      //   polygonColor: "#0000ff",
+      //   /** The color of the text in the selection overlay. */
+      //   textColor: "#000fff",
+      //   /** The color of the texts background in the selection overlay. */
+      //   textContainerColor: "#00ffff",
+      //   /** The color of the polygon in the selection overlay, when highlighted. */
+      //   highlightedPolygonColor: "#42f566",
+      //   /** The color of the text in the selection overlay, when highlighted. */
+      //   highlightedTextColor: "#42f566",
+      //   /** The color of the texts background in the selection overlay, when highlighted. */
+      //   highlightedTextContainerColor: "#f5bf42",
+      // },
       //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
       // see further configs ...
     };
@@ -386,32 +403,6 @@ export default class ScanbotService {
       filter: imageFilter,
     });
   }
-
-  // public async getFilteredDocumentPreviewUri(scannedPage: Page) {
-  //   const result = await ScanbotSDK.getFilteredDocumentPreviewUri({
-  //     page: scannedPage,
-  //     filter: "ImageFilterTypeLowLightBinarization2", // See available filters above
-  //   });
-
-  //   // use the imageFileUri from result to show a preview image of an image filter
-  //   const filteredPreviewImageUri = result.filteredDocumentPreviewUri;
-  // }
-
-  // public async estimateBlur() {
-  //   // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-  //   // if (!licenseCheckMethod()) {
-  //   //   return;
-  //   // }
-
-  //   const result = await ScanbotSDK.estimateBlur({
-  //     imageFileUri: "",
-  //   });
-
-  //   // Check the blurriness value, e.g.
-  //   if (result.blur > 0.6) {
-  //     alert("This scanned image looks blurry. Consider rescanning it.");
-  //   }
-  // }
 
   // ---------------------
   // PDF Create Feature

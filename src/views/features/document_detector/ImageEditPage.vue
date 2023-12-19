@@ -32,14 +32,14 @@
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonImg, IonCard, onIonViewWillEnter } from '@ionic/vue';
 import { ref } from 'vue';
-import { ImageFilterType, Page } from 'capacitor-plugin-scanbot-sdk';
+import { useRouter } from 'vue-router';
 
+import { ImageFilterType, Page } from 'capacitor-plugin-scanbot-sdk';
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { StorageService } from '@/services/storage_service';
 import { ShowAlert } from '@/services/alert_service';
 import CommonModalView from '../../common_views/CommonModalView.vue';
-import { FilterOptions } from '@/utils/feature-util';
-import { useRouter } from 'vue-router';
+import { FilterOptions } from '@/utils/data_util';
 
 const router = useRouter();
 const selectedPageId = router.currentRoute.value.params.selectedPageId as unknown as string;
@@ -104,6 +104,7 @@ const onFilterSelected = async (selectedFilterItem: string) => {
 
         if (filteredResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Image filtering process has been cancelled.', ['OK']);
+            filterOptionModal.value.cancel();
             return;
         };
         await updatePage(filteredResult);
@@ -111,6 +112,7 @@ const onFilterSelected = async (selectedFilterItem: string) => {
     }
     catch (error) {
         await ShowAlert('Image filtering process Failed', JSON.stringify(error), ['OK']);
+        filterOptionModal.value.cancel();
     }
 }
 </script>

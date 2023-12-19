@@ -11,6 +11,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
     description: "The Scanbot SDK provides a Ready-To-Use UI screen component for document scanning.",
     items: [
       { key: CoreFeatureEnum.Document, value: "Scan Document" },
+      { key: CoreFeatureEnum.FinderDocument, value: "Finder Document Scanner" },
       { key: CoreFeatureEnum.ImageResult, value: "View Image Results" },
     ],
   },
@@ -52,7 +53,7 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
   },
 ];
 
-export const getItemList = (selectedItemId: CoreFeatureIdEnum) => {
+export const GetItemList = (selectedItemId: CoreFeatureIdEnum) => {
   return CORE_FEATURES.find(item => item.id == selectedItemId)?.items!;
 }
 

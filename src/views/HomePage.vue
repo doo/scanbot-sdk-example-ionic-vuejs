@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { useRouter } from 'vue-router';
 import {
   IonContent,
   IonHeader,
@@ -35,11 +36,10 @@ import {
 } from "@ionic/vue";
 
 import { ScanbotSDKService } from '../services/scanbot-service';
-
-import { CORE_FEATURES } from "../utils/feature-util";
+import { CORE_FEATURES } from "../utils/data_util";
 import { CoreFeatureIdEnum } from "@/enums/core_feature_id_enum";
+import { ShowAlert } from "@/services/alert_service";
 
-import { useRouter } from 'vue-router';
 const router = useRouter();
 
 onMounted(() => {
@@ -68,7 +68,7 @@ const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
       break;
     }
     default: {
-      //statements;
+      await ShowAlert('Selected item is wrong', 'Please try again!', ['OK']);
       break;
     }
   }

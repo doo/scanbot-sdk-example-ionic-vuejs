@@ -17,9 +17,10 @@
                 </ion-row>
             </ion-grid>
 
-            <!-- To do  -->
-            <!-- <ion-label v-bind:hidden="isImageDataAvailable">Label</ion-label> -->
-
+            <!-- display empty no image text when there is no images to display -->
+            <div id="container" v-bind:hidden="isEmptyTextHidden">
+                <ion-label> No images to display </ion-label>
+            </div>
         </ion-content>
 
         <ion-footer>
@@ -27,22 +28,36 @@
                 <ion-buttons slot="start">
                     <ion-button @click="startDocumentScanner()">Add Page</ion-button>
 
-                    <ion-button id="open-pdf-page-option" expand="block" v-bind:disabled="isEnabled">Create PDF</ion-button>
+                    <ion-button id="open-pdf-page-option" expand="block" v-bind:disabled="isModalEnabled">Create
+                        PDF</ion-button>
                     <CommonModalView trigger="open-pdf-page-option" title="PDF Page Size Options"
                         v-bind:optionList="PDFPageSizeList" :onItemClick="createPDF" ref="pdfPageSizeModal" />
 
-                    <ion-button id="open-tiff-option" expand="block" v-bind:disabled="isEnabled">Create TIFF</ion-button>
+                    <ion-button id="open-tiff-option" expand="block" v-bind:disabled="isModalEnabled">Create
+                        TIFF</ion-button>
                     <CommonModalView trigger="open-tiff-option" title="Tiff Creation Options"
                         v-bind:optionList="TiffOptions" :onItemClick="writeTIFF" ref="tiffOptionModal" />
                 </ion-buttons>
 
                 <ion-buttons slot="end">
-                    <ion-button @click="deleteAll()" v-bind:disabled="isEnabled">Delete</ion-button>
+                    <ion-button @click="deleteAll()" v-bind:disabled="isModalEnabled">Delete</ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
 </template>
+
+<style scoped>
+#container {
+    text-align: center;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+</style>
   
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonImg, IonCol, onIonViewWillEnter, IonLabel } from '@ionic/vue';
@@ -54,7 +69,7 @@ import { ScanbotSDKService } from '@/services/scanbot-service';
 import { StorageService } from '@/services/storage_service';
 import { ShowAlert } from '@/services/alert_service';
 import CommonModalView from '../../common_views/CommonModalView.vue';
-import { PDFPageSizeList, TiffOptions } from '@/utils/feature-util';
+import { PDFPageSizeList, TiffOptions } from '@/utils/data_util';
 import { PDFPageSizeEnum } from '@/enums/pdf_page_size_enum';
 import { TiffOptionsEnum } from '@/enums/tiff_option_enum';
 
@@ -62,8 +77,8 @@ const router = useRouter();
 
 let pages: Page[] = [];
 let imageData = ref<any>([]);
-let isEnabled = ref<boolean>(true);
-let isImageDataAvailable = ref<boolean>(true);
+let isModalEnabled = ref<boolean>(true);
+let isEmptyTextHidden = ref<boolean>(true);
 const pdfPageSizeModal = ref();
 const tiffOptionModal = ref();
 
@@ -76,7 +91,7 @@ onIonViewWillEnter(async () => {
 // -----------------
 const onItemClick = async (selectedPageId: string) => {
     if (!(await ScanbotSDKService.validateLicense())) { return; }
-    
+
     await router.push('/image_edit/' + selectedPageId);
 }
 
@@ -87,9 +102,9 @@ async function reloadPages() {
     imageData.value = [];
     try {
         pages = StorageService.INSTANCE.getPages();
-        isImageDataAvailable.value = pages.length > 0;
+        isEmptyTextHidden.value = pages.length > 0;
 
-        if (pages.length <=0) return;
+        if (pages.length <= 0) return;
 
         for (const page of pages) {
             const url = page.documentPreviewImageFileUri as string;
@@ -98,7 +113,7 @@ async function reloadPages() {
 
             imageData.value.push({ id: page.pageId, url: imageURL });
         }
-        isEnabled.value = imageData.value.length <= 0;
+        isModalEnabled.value = imageData.value.length <= 0;
     }
     catch (error) {
         ShowAlert('Load Scanned Documents Failed', JSON.stringify(error), ['OK'],);
@@ -116,9 +131,7 @@ const startDocumentScanner = async () => {
             await ShowAlert('Information', 'Document scanner has been canceled.', ['OK']);
             return;
         };
-
         await StorageService.INSTANCE.addPages(documentResult!.pages);
-
         await reloadPages();
     }
     catch (error) {
@@ -128,7 +141,10 @@ const startDocumentScanner = async () => {
 
 /* Create PDF from scanned image urls */
 const createPDF = async (selectedItem: PDFPageSizeEnum) => {
-    if (!(await ScanbotSDKService.validateLicense())) { return; }
+    if (!(await ScanbotSDKService.validateLicense())) {
+        pdfPageSizeModal.value.cancel();
+        return;
+    }
 
     try {
         const imageUrls = pages.map(p => p.documentImageFileUri!);
@@ -140,18 +156,21 @@ const createPDF = async (selectedItem: PDFPageSizeEnum) => {
             await ShowAlert('Information', 'PDF Creation has been canceled.', ['OK']);
             return;
         };
-
         alert(JSON.stringify(result));
         pdfPageSizeModal.value.cancel();
     }
     catch (error) {
         await ShowAlert('PDF Creation Failed', JSON.stringify(error), ['OK']);
+        pdfPageSizeModal.value.cancel();
     }
 }
 
 /* Create TIFF from scanned image urls */
 const writeTIFF = async (selectedItem: TiffOptionsEnum) => {
-    if (!(await ScanbotSDKService.validateLicense())) { return; }
+    if (!(await ScanbotSDKService.validateLicense())) {
+        tiffOptionModal.value.cancel();
+        return;
+    }
 
     try {
         const imageUrls = pages.map(p => p.documentImageFileUri!);
@@ -163,18 +182,19 @@ const writeTIFF = async (selectedItem: TiffOptionsEnum) => {
             await ShowAlert('Information', 'TIFF Creation has been canceled.', ['OK']);
             return;
         };
-
         alert(JSON.stringify(result));
         tiffOptionModal.value.cancel();
-    } catch (error) {
-        await ShowAlert('TIFF Creation Failed', JSON.stringify(error), ['OK']);
     }
-
+    catch (error) {
+        await ShowAlert('TIFF Creation Failed', JSON.stringify(error), ['OK']);
+        tiffOptionModal.value.cancel();
+    }
 }
 
 const deleteAll = async () => {
     await StorageService.INSTANCE.removeAllPages();
     imageData.value = [];
-    isEnabled.value = imageData.value.length <= 0;
+    isModalEnabled.value = imageData.value.length <= 0;
+    isEmptyTextHidden.value = imageData.value.length > 0;
 }
 </script>

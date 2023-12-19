@@ -10,7 +10,7 @@
         </ion-header>
         <ion-content color="light">
             <ion-list :inset="true">
-                <ion-item :button="true" v-for="barcode in barcodes" :key="barcode.text">
+                <ion-item :detail="false" v-for="barcode in barcodes">
                     <ion-label>
                         <h3>{{ barcode.type }}</h3>
                         <p>{{ barcode.text }}</p>
@@ -22,10 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { BarcodeRepository } from '@/utils/barcode_repository';
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter, IonList, IonItem, IonLabel } from '@ionic/vue';
-import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
 import { ref } from 'vue';
+
+import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
+import { BarcodeRepository } from '@/utils/barcode_repository';
 
 let barcodes = ref<BarcodeResultField[]>([]);
 

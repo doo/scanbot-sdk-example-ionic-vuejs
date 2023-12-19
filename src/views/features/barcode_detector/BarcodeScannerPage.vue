@@ -9,7 +9,7 @@ import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
 
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { ShowAlert } from '@/services/alert_service';
-import { getItemList } from '../../../utils/feature-util';
+import { GetItemList } from '../../../utils/data_util';
 import { CoreFeatureIdEnum } from '@/enums/core_feature_id_enum';
 import { CoreFeatureEnum } from '@/enums/core_feature_enum';
 import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
@@ -21,7 +21,7 @@ let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
 const selectedItemId = router.currentRoute.value.params.selectedItem as unknown as CoreFeatureIdEnum;
 
 onIonViewWillEnter(() => {
-    coreItems = getItemList(selectedItemId);
+    coreItems = GetItemList(selectedItemId);
 });
 
 /** Scan barcodes */
@@ -37,7 +37,7 @@ const startBarcodeScanner = async () => {
         await navigateToBarcodeResultPage(barcodeResult?.barcodes!);
     }
     catch (error) {
-        await ShowAlert('Scan barcodes Failed', JSON.stringify(error), ['OK']);
+        await ShowAlert('Scan Barcodes Failed', JSON.stringify(error), ['OK']);
     }
 }
 
@@ -54,7 +54,7 @@ const startBatchBarcodeScanner = async () => {
         await navigateToBarcodeResultPage(batchBarcodeResult?.barcodes!);
     }
     catch (error) {
-        await ShowAlert('Scan barcodes Failed', JSON.stringify(error), ['OK']);
+        await ShowAlert('Scan Barcodes Failed', JSON.stringify(error), ['OK']);
     }
 }
 
@@ -70,11 +70,10 @@ const detectBarcodesFromImage = async () => {
             await ShowAlert('Information', 'Barcode detector has been cancelled.', ['OK']);
             return;
         };
-
         await navigateToBarcodeResultPage(detectedBarcodesResult!.barcodes);
     }
     catch (error) {
-        await ShowAlert('Detect Barcodes Failed', JSON.stringify(error), ['OK']);
+        await ShowAlert('Detect Barcodes Failed', 'Please try again!', ['OK']);
     }
 }
 
@@ -102,11 +101,10 @@ const detectBarcodeFromImages = async () => {
                 barcodes.push(barcode);
             });
         });
-
         await navigateToBarcodeResultPage(barcodes);
     }
     catch (error) {
-        await ShowAlert('Detect Barcodes Failed', JSON.stringify(error), ['OK']);
+        await ShowAlert('Detect Barcodes Failed', 'Please try again!', ['OK']);
     }
 }
 
@@ -117,7 +115,7 @@ const navigateToBarcodeResultPage = async (barcodes: BarcodeResultField[]) => {
         await router.push('/barcode_result');
     } 
     catch (error) {
-        await ShowAlert('Navigate to barcode result page Failed', JSON.stringify(error), ['OK']);
+        await ShowAlert('Navigate to barcode result page failed', JSON.stringify(error), ['OK']);
     }
 }
 
@@ -143,7 +141,7 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
             break;
         }
         default: {
-            //statements;
+            await ShowAlert('Selected item is wrong', 'Please try again!', ['OK']);
             break;
         }
     }
