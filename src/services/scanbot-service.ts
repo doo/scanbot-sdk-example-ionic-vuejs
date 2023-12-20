@@ -1,3 +1,4 @@
+import { Directory, Filesystem } from "@capacitor/filesystem";
 import {
   ScanbotSDK,
   ScanbotSdkConfiguration,
@@ -47,16 +48,23 @@ export default class ScanbotService {
       licenseKey: this.LICENSE_KEY,
     };
 
-    // if (this.USE_CUSTOM_STORAGE) {
-    // 	configuration.storageBaseDirectory = await this.getStorageBaseDirectory();
-    // 	console.log("Changed Storage Base Directory to " + configuration.storageBaseDirectory);
-    // }
+    if (this.USE_CUSTOM_STORAGE) {
+      configuration.storageBaseDirectory = await this.getStorageBaseDirectory();
+      console.log("Changed Storage Base Directory to " + configuration.storageBaseDirectory);
+    }
     try {
-      const result = ScanbotSDK.initializeSDK(configuration);
+      const result = await ScanbotSDK.initializeSDK(configuration);
       console.log(JSON.stringify(result));
     } catch (error) {
       ShowAlert('Initialization Failed', JSON.stringify(error), ['OK']);
     }
+  }
+
+  // -------------------------
+  // Get system storage path
+  // -------------------------
+  private getStorageBaseDirectory = async () => {
+    return (await Filesystem.getUri({ path: this.CUSTOM_STORAGE_NAME, directory: Directory.External })).uri;
   }
 
   // -------------------------
@@ -71,7 +79,7 @@ export default class ScanbotService {
       }
       alert('Scanbot SDK (trial) license has expired!');
       return false;
-    } 
+    }
     catch (error) {
       ShowAlert('License Validation Failed', JSON.stringify(error), ['OK']);
       return false;
@@ -125,7 +133,6 @@ export default class ScanbotService {
       topBarBackgroundColor: "#c8193c",
       // see further configs ...
     };
-
     return await ScanbotSDK.startCroppingScreen({
       page: page,
       configuration: configuration,
@@ -196,7 +203,6 @@ export default class ScanbotService {
       //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
       // see further configs ...
     };
-
     return await ScanbotSDK.startBatchBarcodeScanner(configuration);
   }
 
@@ -233,7 +239,6 @@ export default class ScanbotService {
       orientationLockMode: "PORTRAIT",
       // see further configs ...
     };
-
     return await ScanbotSDK.startMrzScanner(configuration);
   }
 
@@ -248,7 +253,6 @@ export default class ScanbotService {
       orientationLockMode: "PORTRAIT",
       // see further configs ...
     };
-
     return await ScanbotSDK.startEHICScanner(configuration);
   }
 
@@ -348,21 +352,6 @@ export default class ScanbotService {
     return await ScanbotSDK.startGenericDocumentRecognizer(configuration);
   }
 
-  public async performOCR() {
-    // Always make sure you have a valid license on runtime via SDK.getLicenseInfo()
-    // if (!licenseCheckMethod()) {
-    //   return;
-    // }
-
-    const result = await ScanbotSDK.performOCR({
-      imageFileUris: [],
-      languages: ["en"],
-      options: {
-        outputFormat: "FULL_OCR_RESULT",
-      },
-    });
-  }
-
   // ------------------
   // Convert Image URL
   // ------------------
@@ -374,20 +363,6 @@ export default class ScanbotService {
 
     return `data:image/jpeg;base64,${result.base64ImageData}`;
   }
-
-  // public async applyImageFilterOnImage(imageUrl: string, imageFilter: ImageFilterType) {
-  //   // Always make sure you have a valid license on runtime via ScanbotSDK.getLicenseInfo()
-  //   // if (!licenseCheckMethod()) {
-  //   //   return;
-  //   // }
-
-  //   return await ScanbotSDK.applyImageFilter({
-  //     imageFileUri: imageUrl,
-  //     filter: imageFilter, // See available filters below
-  //   });
-
-
-  // }
 
   // ----------------------------------
   // Apply filter for a selected image

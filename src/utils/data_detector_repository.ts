@@ -6,7 +6,7 @@ export class DataDetectorRepository {
     public static MedResult: MedicalCertificateScannerResult;
 
     public static EHICResult: { name: string; value: string; }[] = [];
-    
+
     public static CheckResult: { name: string; value: string; }[] = [];
 
     /** Generate readable data from check results */

@@ -72,7 +72,7 @@ const startCheckScanner = async () => {
         };
         DataDetectorRepository.GenerateCheckResult(checkResult!);
         await router.push('/check_result');
-    } 
+    }
     catch (error) {
         await ShowAlert('Detect Check data Failed', JSON.stringify(error), ['OK']);
     }
@@ -92,7 +92,7 @@ const detectCheckFromImage = async () => {
         };
         DataDetectorRepository.GenerateCheckResult(checkResult!);
         await router.push('/check_result');
-    } 
+    }
     catch (error) {
         await ShowAlert('Detect Check data Failed', 'Please try again!', ['OK']);
     }
@@ -109,7 +109,7 @@ const startLicensePlateScaner = async () => {
             return;
         };
         alert(JSON.stringify(licensePlateResult));
-    } 
+    }
     catch (error) {
         await ShowAlert('Detect license plate data Failed', JSON.stringify(error), ['OK']);
     }
@@ -127,7 +127,7 @@ const startMedicalCertificateScanner = async () => {
         };
         DataDetectorRepository.MedResult = medicalCertificateResult;
         await router.push('/medical_certificate');
-    } 
+    }
     catch (error) {
         await ShowAlert('Detect Medical data Failed', JSON.stringify(error), ['OK']);
     }
@@ -144,7 +144,7 @@ const startScanTextDataScaner = async () => {
             return;
         };
         alert(JSON.stringify(textResult));
-    } 
+    }
     catch (error) {
         await ShowAlert('Detect text data Failed', JSON.stringify(error), ['OK']);
     }
@@ -161,7 +161,7 @@ const startGenericDocumentScaner = async () => {
             return;
         };
         alert(JSON.stringify(genericDocumentResult));
-    } 
+    }
     catch (error) {
         await ShowAlert('Generic document scanner Failed', JSON.stringify(error), ['OK']);
     }

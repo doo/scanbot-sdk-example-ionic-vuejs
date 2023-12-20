@@ -5,7 +5,6 @@ export const PickImage = async () => {
         resultType: CameraResultType.Uri,
         source: CameraSource.Photos,
     });
-
     return image.path!;
 }
 
@@ -13,6 +12,5 @@ export const PickImages = async () => {
     const pickedImageResults = await Camera.pickImages({
         quality: 80,
     });
-
     return pickedImageResults.photos;
 }

@@ -26,6 +26,7 @@ onIonViewWillEnter(() => {
 /** Start document scanner for capture documents */
 const startDocumentScanner = async () => {
     if (!await ScanbotSDKService.validateLicense()) return;
+
     try {
         const documentResult = await ScanbotSDKService.startDocumentScanner();
         if (documentResult!.status == 'CANCELED') {
@@ -34,7 +35,7 @@ const startDocumentScanner = async () => {
         };
         await StorageService.INSTANCE.addPages(documentResult!.pages);
         await router.push('/image_preview');
-    } 
+    }
     catch (error) {
         await ShowAlert('Scan Document Failed', JSON.stringify(error), ['OK']);
     }
@@ -43,6 +44,7 @@ const startDocumentScanner = async () => {
 /** Start finder socument scanner for capture documents */
 const startFinderDocumentScanner = async () => {
     if (!await ScanbotSDKService.validateLicense()) return;
+    
     try {
         const finderDocumentResult = await ScanbotSDKService.startFinderDocumentScanner();
         if (finderDocumentResult!.status == 'CANCELED') {
@@ -51,7 +53,7 @@ const startFinderDocumentScanner = async () => {
         };
         await StorageService.INSTANCE.addPages(finderDocumentResult!.pages);
         await router.push('/image_preview');
-    } 
+    }
     catch (error) {
         await ShowAlert('Scan Document Failed', JSON.stringify(error), ['OK']);
     }

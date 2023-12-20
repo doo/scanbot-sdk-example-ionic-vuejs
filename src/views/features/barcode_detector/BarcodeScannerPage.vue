@@ -113,7 +113,7 @@ const navigateToBarcodeResultPage = async (barcodes: BarcodeResultField[]) => {
     try {
         await BarcodeRepository.addBarcodes(barcodes);
         await router.push('/barcode_result');
-    } 
+    }
     catch (error) {
         await ShowAlert('Navigate to barcode result page failed', JSON.stringify(error), ['OK']);
     }

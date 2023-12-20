@@ -91,14 +91,14 @@ const startCroppingScreen = async () => {
 
 /* Apply filter to the image */
 const onFilterSelected = async (selectedFilterItem: string) => {
-    if (!(await ScanbotSDKService.validateLicense())) { 
+    if (!(await ScanbotSDKService.validateLicense())) {
         filterOptionModal.value.cancel();
-        return; 
+        return;
     }
 
     try {
         const filteredResult = await ScanbotSDKService.applyImageFilterOnPage(
-            selectedPage, 
+            selectedPage,
             selectedFilterItem as ImageFilterType
         );
 

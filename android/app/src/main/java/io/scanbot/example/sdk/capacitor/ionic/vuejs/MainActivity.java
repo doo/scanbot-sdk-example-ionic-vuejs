@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package io.scanbot.example.sdk.capacitor.ionic.vuejs;
 
 import com.getcapacitor.BridgeActivity;
 

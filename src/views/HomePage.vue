@@ -42,8 +42,8 @@ import { ShowAlert } from "@/services/alert_service";
 
 const router = useRouter();
 
-onMounted(() => {
-  ScanbotSDKService.initSdk();
+onMounted(async () => {
+  await ScanbotSDKService.initSdk();
 });
 
 // -----------------

@@ -11,7 +11,7 @@
         </ion-header>
         <ion-content class="ion-padding">
             <ion-list>
-                <ion-item :button="true" v-for="item in props.optionList" :key="item['key']"
+                <ion-item :detail="false" :button="true" v-for="item in props.optionList" :key="item['key']"
                     @click="onItemClick(item['key'])">
                     <ion-label>{{ item.value }}</ion-label>
                 </ion-item>

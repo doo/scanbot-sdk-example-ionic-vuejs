@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter, IonList, IonItem, IonLabel } from '@ionic/vue';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter, IonList, IonItem } from '@ionic/vue';
 import { ref } from 'vue';
 
 import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';

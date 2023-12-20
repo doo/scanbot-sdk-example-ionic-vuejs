@@ -154,6 +154,7 @@ const createPDF = async (selectedItem: PDFPageSizeEnum) => {
 
         if (result!.status == 'CANCELED') {
             await ShowAlert('Information', 'PDF Creation has been canceled.', ['OK']);
+            pdfPageSizeModal.value.cancel();
             return;
         };
         alert(JSON.stringify(result));
@@ -174,12 +175,13 @@ const writeTIFF = async (selectedItem: TiffOptionsEnum) => {
 
     try {
         const imageUrls = pages.map(p => p.documentImageFileUri!);
-        const binarized = selectedItem == TiffOptionsEnum.Binarized;
+        const binarized = selectedItem === TiffOptionsEnum.Binarized;
 
         const result = await ScanbotSDKService.writeTIFF(imageUrls, binarized);
 
         if (result!.status == 'CANCELED') {
             await ShowAlert('Information', 'TIFF Creation has been canceled.', ['OK']);
+            tiffOptionModal.value.cancel();
             return;
         };
         alert(JSON.stringify(result));
