@@ -263,7 +263,6 @@ export default class ScanbotService {
       finderLineColor: "#0000ff",
       // see further configs ...
     };
-
     return await ScanbotSDK.startCheckRecognizer(configuration);
   }
 
@@ -289,7 +288,6 @@ export default class ScanbotService {
       orientationLockMode: "PORTRAIT",
       // see further configs...
     };
-
     return await ScanbotSDK.startMedicalCertificateRecognizer(
       configuration
     );
@@ -316,7 +314,6 @@ export default class ScanbotService {
       },
       // Other UI configs...
     };
-
     return await ScanbotSDK.startTextDataScanner(configuration);
   }
 
@@ -336,7 +333,6 @@ export default class ScanbotService {
       confirmationDialogConfirmButtonFilled: true,
       // see further configs...
     };
-
     return await ScanbotSDK.startLicensePlateScanner(configuration);
   }
 
@@ -349,7 +345,6 @@ export default class ScanbotService {
       //shouldSavePhotoImageInStorage: true,
       // see further configs...
     };
-
     return await ScanbotSDK.startGenericDocumentRecognizer(configuration);
   }
 

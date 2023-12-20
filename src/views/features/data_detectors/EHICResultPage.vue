@@ -1,5 +1,5 @@
 <template>
-    <DataDetectorResultPage title="Health Insuarance Card Result" v-bind:dataList="DataDetectorRepository.EHICResult" />
+    <DataDetectorResultPage title="EHIC Result" v-bind:dataList="DataDetectorRepository.EHICResult" />
 </template>
 
 <script setup lang="ts">

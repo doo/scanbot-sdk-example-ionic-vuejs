@@ -27,7 +27,7 @@ const getLicenseInfo = async () => {
         const licenseInfo = await ScanbotSDKService.viewLicenseInfo();
         await ShowAlert('License Info', JSON.stringify(licenseInfo), ['OK']);
     } catch (error) {
-        await ShowAlert('License Info', JSON.stringify(error), ['OK']);
+        await ShowAlert('Failed', JSON.stringify(error), ['OK']);
     }
 }
 
@@ -36,7 +36,7 @@ const getOCRInfo = async () => {
         const ocrInfo = await ScanbotSDKService.viewOcrConfigs();
         await ShowAlert('OCR Info', JSON.stringify(ocrInfo), ['OK']);
     } catch (error) {
-        await ShowAlert('OCR Info', JSON.stringify(error), ['OK']);
+        await ShowAlert('Failed', JSON.stringify(error), ['OK']);
     }
 }
 
@@ -55,7 +55,7 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
             break;
         }
         default: {
-            //statements;
+            await ShowAlert('Selected item is wrong', 'Please try again!', ['OK']);
             break;
         }
     }

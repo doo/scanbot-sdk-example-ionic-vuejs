@@ -1,5 +1,5 @@
 <template>
-    <CoreFeatureItemsView title="Date Detectors" v-bind:coreItems="coreItems" :onItemClick="onItemClick" />
+    <CoreFeatureItemsView title="Data Detectors" v-bind:coreItems="coreItems" :onItemClick="onItemClick" />
 </template>
   
 <script setup lang="ts">
@@ -13,7 +13,6 @@ import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
 
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { DataDetectorRepository } from '@/utils/data_detector_repository';
-import { HealthInsuranceCardScannerResult } from 'capacitor-plugin-scanbot-sdk';
 import { ShowAlert } from '@/services/alert_service';
 import { PickImage } from '@/utils/camera_util';
 
@@ -35,7 +34,7 @@ const startMRZScanner = async () => {
             await ShowAlert('Information', 'MRZ detector has been cancelled.', ['OK']);
             return;
         };
-        DataDetectorRepository.DataResult = JSON.stringify(mrzResult);
+        DataDetectorRepository.MrzResult = mrzResult;
         await router.push('/mrz_result');
     }
     catch (error) {
@@ -53,25 +52,12 @@ const startEHICScanner = async () => {
             await ShowAlert('Information', 'EHIC detector has been cancelled.', ['OK']);
             return;
         };
-        DataDetectorRepository.DataResult = JSON.stringify(ehicResult);
-        generatResult(ehicResult!);
+        DataDetectorRepository.GeneratEHICResult(ehicResult!);
         await router.push('/ehic_result');
     }
     catch (error) {
         await ShowAlert('Detect EHIC data Failed', JSON.stringify(error), ['OK']);
     }
-}
-
-/** Generate readable data from ehic results */
-const generatResult = (result: HealthInsuranceCardScannerResult) => {
-    const newFields: { name: string, value: string }[] = []
-    result.fields.map(item => {
-        newFields.push({
-            name: item.type,
-            value: item.value
-        });
-    });
-    DataDetectorRepository.EHICResult = newFields;
 }
 
 /** Datect data from a check */
@@ -106,10 +92,9 @@ const detectCheckFromImage = async () => {
         };
         DataDetectorRepository.GenerateCheckResult(checkResult!);
         await router.push('/check_result');
-
     } 
     catch (error) {
-        await ShowAlert('Detect Check data Failed', JSON.stringify(error), ['OK']);
+        await ShowAlert('Detect Check data Failed', 'Please try again!', ['OK']);
     }
 }
 
@@ -220,7 +205,7 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
             break;
         }
         default: {
-            //statements;
+            await ShowAlert('Selected item is wrong', 'Please try again!', ['OK']);
             break;
         }
     }

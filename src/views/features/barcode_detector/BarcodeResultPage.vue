@@ -11,10 +11,7 @@
         <ion-content color="light">
             <ion-list :inset="true">
                 <ion-item :detail="false" v-for="barcode in barcodes">
-                    <ion-label>
-                        <h3>{{ barcode.type }}</h3>
-                        <p>{{ barcode.text }}</p>
-                    </ion-label>
+                    <CommonLabel v-bind:title="barcode.type" v-bind:value="barcode.text" />
                 </ion-item>
             </ion-list>
         </ion-content>
@@ -27,6 +24,7 @@ import { ref } from 'vue';
 
 import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
 import { BarcodeRepository } from '@/utils/barcode_repository';
+import CommonLabel from '@/views/common_views/CommonLabel.vue';
 
 let barcodes = ref<BarcodeResultField[]>([]);
 

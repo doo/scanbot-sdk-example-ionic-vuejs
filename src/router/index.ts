@@ -7,12 +7,12 @@ import DocumentScannerPage from '@/views/features/document_detector/DocumentScan
 import BarcodeScannerPage from '@/views/features/barcode_detector/BarcodeScannerPage.vue';
 import ImageEditPage from '@/views/features/document_detector/ImageEditPage.vue';
 import BarcodeResultPage from '@/views/features/barcode_detector/BarcodeResultPage.vue';
-import DataDetectorPage from '../views/features/data_detectors/DataDetectorPage.vue';
-import MRZResultPage from '../views/features/data_detectors/MRZResultPage.vue';
-import EHICResultPage from '../views/features/data_detectors/EHICResultPage.vue';
-import CheckResultPage from '../views/features/data_detectors/CheckResultPage.vue';
-import MoreFeaturePage from '../views/features/other_api_features/MoreFeaturePage.vue';
-import MedicalCertificateResultPage from '../views/features/data_detectors/MedicalCertificateResultPage.vue';
+import DataDetectorPage from '@/views/features/data_detectors/DataDetectorPage.vue';
+import MRZResultPage from '@/views/features/data_detectors/MRZResultPage.vue';
+import EHICResultPage from '@/views/features/data_detectors/EHICResultPage.vue';
+import CheckResultPage from '@/views/features/data_detectors/CheckResultPage.vue';
+import MoreFeaturePage from '@/views/features/other_api_features/MoreFeaturePage.vue';
+import MedicalCertificateResultPage from '@/views/features/data_detectors/MedicalCertificateResultPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
