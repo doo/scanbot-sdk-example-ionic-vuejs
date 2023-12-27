@@ -102,17 +102,16 @@ const onFilterSelected = async (selectedFilterItem: string) => {
             selectedFilterItem as ImageFilterType
         );
 
+        filterOptionModal.value.cancel();
         if (filteredResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Image filtering process has been cancelled.', ['OK']);
-            filterOptionModal.value.cancel();
             return;
         };
         await updatePage(filteredResult);
-        filterOptionModal.value.cancel();
     }
     catch (error) {
-        await ShowAlert('Image filtering process Failed', JSON.stringify(error), ['OK']);
         filterOptionModal.value.cancel();
+        await ShowAlert('Image filtering process Failed', JSON.stringify(error), ['OK']);
     }
 }
 </script>

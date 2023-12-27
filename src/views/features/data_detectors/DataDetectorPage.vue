@@ -15,6 +15,7 @@ import { ScanbotSDKService } from '@/services/scanbot-service';
 import { DataDetectorRepository } from '@/utils/data_detector_repository';
 import { ShowAlert } from '@/services/alert_service';
 import { PickImage } from '@/utils/camera_util';
+import { dismissLoading, showLoading } from '@/utils/loading_util';
 
 const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
@@ -85,7 +86,9 @@ const detectCheckFromImage = async () => {
     try {
         const originalImageFileUri = await PickImage();
 
+        await showLoading();
         const checkResult = await ScanbotSDKService.recognizeCheck(originalImageFileUri);
+        await dismissLoading();
         if (checkResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Check data detector has been cancelled.', ['OK']);
             return;
@@ -94,6 +97,7 @@ const detectCheckFromImage = async () => {
         await router.push('/check_result');
     }
     catch (error) {
+        await dismissLoading();
         await ShowAlert('Detect Check data Failed', 'Please try again!', ['OK']);
     }
 }

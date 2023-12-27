@@ -15,6 +15,7 @@ import { CoreFeatureEnum } from '@/enums/core_feature_enum';
 import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
 import { BarcodeRepository } from '@/utils/barcode_repository';
 import { PickImage, PickImages } from '@/utils/camera_util';
+import { dismissLoading, showLoading } from '@/utils/loading_util';
 
 const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
@@ -64,8 +65,9 @@ const detectBarcodesFromImage = async () => {
 
     try {
         const originalImageFileUri = await PickImage();
-
+        await showLoading();
         const detectedBarcodesResult = await ScanbotSDKService.detectBarcodesOnImage(originalImageFileUri);
+        await dismissLoading();
         if (detectedBarcodesResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Barcode detector has been cancelled.', ['OK']);
             return;
@@ -73,6 +75,7 @@ const detectBarcodesFromImage = async () => {
         await navigateToBarcodeResultPage(detectedBarcodesResult!.barcodes);
     }
     catch (error) {
+        await dismissLoading();
         await ShowAlert('Detect Barcodes Failed', 'Please try again!', ['OK']);
     }
 }
@@ -86,11 +89,13 @@ const detectBarcodeFromImages = async () => {
         const originalImageFileUrls: string[] = [];
         const pickedPhotos = await PickImages();
 
+        await showLoading();
         pickedPhotos.forEach(photo => {
             originalImageFileUrls.push(photo.path!);
         });
 
         const detectedBarcodesResult = await ScanbotSDKService.detectBarcodesOnImages(originalImageFileUrls);
+        await dismissLoading();
         if (detectedBarcodesResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Barcode detector has been cancelled.', ['OK']);
             return;
@@ -104,6 +109,7 @@ const detectBarcodeFromImages = async () => {
         await navigateToBarcodeResultPage(barcodes);
     }
     catch (error) {
+        await dismissLoading();
         await ShowAlert('Detect Barcodes Failed', 'Please try again!', ['OK']);
     }
 }

@@ -18,9 +18,7 @@
             </ion-grid>
 
             <!-- display empty no image text when there is no images to display -->
-            <div id="container" v-bind:hidden="isEmptyTextHidden">
-                <ion-label> No images to display </ion-label>
-            </div>
+            <CommonEmptyView message="No images to display." v-bind:hidden="isEmptyTextHidden" />
         </ion-content>
 
         <ion-footer>
@@ -46,18 +44,6 @@
         </ion-footer>
     </ion-page>
 </template>
-
-<style scoped>
-#container {
-    text-align: center;
-
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-}
-</style>
   
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonImg, IonCol, onIonViewWillEnter, IonLabel } from '@ionic/vue';
@@ -72,6 +58,7 @@ import CommonModalView from '../../common_views/CommonModalView.vue';
 import { PDFPageSizeList, TiffOptions } from '@/utils/data_util';
 import { PDFPageSizeEnum } from '@/enums/pdf_page_size_enum';
 import { TiffOptionsEnum } from '@/enums/tiff_option_enum';
+import CommonEmptyView from '@/views/common_views/CommonEmptyView.vue';
 
 const router = useRouter();
 
@@ -152,17 +139,16 @@ const createPDF = async (selectedItem: PDFPageSizeEnum) => {
 
         const result = await ScanbotSDKService.createPDF(imageUrls, pdfPageSize);
 
+        pdfPageSizeModal.value.cancel();
         if (result!.status == 'CANCELED') {
             await ShowAlert('Information', 'PDF Creation has been canceled.', ['OK']);
-            pdfPageSizeModal.value.cancel();
             return;
         };
         alert(JSON.stringify(result));
-        pdfPageSizeModal.value.cancel();
     }
     catch (error) {
-        await ShowAlert('PDF Creation Failed', JSON.stringify(error), ['OK']);
         pdfPageSizeModal.value.cancel();
+        await ShowAlert('PDF Creation Failed', JSON.stringify(error), ['OK']);
     }
 }
 
@@ -179,17 +165,16 @@ const writeTIFF = async (selectedItem: TiffOptionsEnum) => {
 
         const result = await ScanbotSDKService.writeTIFF(imageUrls, binarized);
 
+        tiffOptionModal.value.cancel();
         if (result!.status == 'CANCELED') {
             await ShowAlert('Information', 'TIFF Creation has been canceled.', ['OK']);
-            tiffOptionModal.value.cancel();
             return;
         };
         alert(JSON.stringify(result));
-        tiffOptionModal.value.cancel();
     }
     catch (error) {
-        await ShowAlert('TIFF Creation Failed', JSON.stringify(error), ['OK']);
         tiffOptionModal.value.cancel();
+        await ShowAlert('TIFF Creation Failed', JSON.stringify(error), ['OK']);
     }
 }
 
