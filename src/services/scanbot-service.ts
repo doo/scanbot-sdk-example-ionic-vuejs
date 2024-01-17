@@ -22,14 +22,16 @@ import {
 import { ShowAlert } from "./alert_service";
 
 export default class ScanbotService {
-  /**
-   * Here you can set your license key.
-   *
-   * If you leave this field empty, a 60 seconds trial license will be activated
-   * once the SDK is initialized.
-   *
-   * You can request a 7-day trial license on [our website](https://scanbot.io/trial/).
-   */
+  
+  /*
+  * TODO add the license key here.
+  * Please note: The Scanbot SDK will run without a license key for one minute per session!
+  * After the trial period has expired, all SDK functions and UI components will stop working.
+  * You can get a free "no-strings-attached" trial license.
+  * Please submit the trial license form (https://scanbot.io/trial/) on our website using
+  * the app identifier "io.scanbot.example.sdk.capacitor.ionic.vuejs" of this example app
+  * or of your app (see capacitor.config.ts).
+  */
   private readonly LICENSE_KEY = "";
 
   // If true, a custom storage base directory will be set.
