@@ -59,6 +59,7 @@ import { PDFPageSizeList, TiffOptions } from '@/utils/data_util';
 import { PDFPageSizeEnum } from '@/enums/pdf_page_size_enum';
 import { TiffOptionsEnum } from '@/enums/tiff_option_enum';
 import CommonEmptyView from '@/views/common_views/CommonEmptyView.vue';
+import { Capacitor } from '@capacitor/core';
 
 const router = useRouter();
 
@@ -94,11 +95,7 @@ async function reloadPages() {
         if (pages.length <= 0) return;
 
         for (const page of pages) {
-            const url = page.documentPreviewImageFileUri as string;
-            const imageURL = await ScanbotSDKService.getImageData(url);
-            if (imageURL === '' || imageURL === undefined) break;
-
-            imageData.value.push({ id: page.pageId, url: imageURL });
+            imageData.value.push({ id: page.pageId, url: Capacitor.convertFileSrc(page.documentPreviewImageFileUri!) });
         }
         isModalEnabled.value = imageData.value.length <= 0;
     }

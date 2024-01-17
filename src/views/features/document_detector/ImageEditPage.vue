@@ -40,6 +40,7 @@ import { StorageService } from '@/services/storage_service';
 import { ShowAlert } from '@/services/alert_service';
 import CommonModalView from '../../common_views/CommonModalView.vue';
 import { FilterOptions } from '@/utils/data_util';
+import { Capacitor } from '@capacitor/core';
 
 const router = useRouter();
 const selectedPageId = router.currentRoute.value.params.selectedPageId as unknown as string;
@@ -58,7 +59,7 @@ const loadData = async () => {
 
     try {
         selectedPage = StorageService.INSTANCE.getPageById(selectedPageId);
-        imageURL.value = await ScanbotSDKService.getImageData(selectedPage?.documentImageFileUri!);
+        imageURL.value = Capacitor.convertFileSrc(selectedPage?.documentImageFileUri!);
     }
     catch (error) {
         ShowAlert('Load Selected Image Failed', JSON.stringify(error), ['OK'],);
