@@ -46,10 +46,6 @@ const onItemClick = async (selectedItem: CoreFeatureEnum) => {
             await getLicenseInfo();
             break;
         }
-        case CoreFeatureEnum.OCRConfig: {
-            //await getOCRInfo(); // broken will fix in 2.2.4
-            break;
-        }
         case CoreFeatureEnum.LearnMore: {
             window.location.href = String('https://scanbot.io');
             break;

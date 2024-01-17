@@ -47,7 +47,6 @@ export const CORE_FEATURES: CoreFeatureModel[] = [
     description: "The Scanbot SDK provides more API methods.",
     items: [
       { key: CoreFeatureEnum.LicenseInfo, value: "View License Info" },
-      { key: CoreFeatureEnum.OCRConfig, value: "View OCR Configs" },
       { key: CoreFeatureEnum.LearnMore, value: "Learn More About the Scanbot SDK" },
     ],
   },
