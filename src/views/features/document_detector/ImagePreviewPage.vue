@@ -183,5 +183,6 @@ const deleteAll = async () => {
     imageData.value = [];
     isModalEnabled.value = imageData.value.length <= 0;
     isEmptyTextHidden.value = imageData.value.length > 0;
+    await ScanbotSDKService.cleanUp();
 }
 </script>

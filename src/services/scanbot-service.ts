@@ -420,6 +420,17 @@ export default class ScanbotService {
       alert(JSON.stringify(error));
     }
   }
+
+  // ----------------------------
+  // Clean all data from storage
+  // ----------------------------
+  public cleanUp = async () => {
+    try {
+      await ScanbotSDK.cleanup();
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+  }
 }
 
 export const ScanbotSDKService = new ScanbotService();
