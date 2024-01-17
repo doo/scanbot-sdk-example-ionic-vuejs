@@ -345,6 +345,7 @@ export default class ScanbotService {
   // -------------------------
   public startGenericDocumentRecognizer = async () => {
     const configuration: GenericDocumentRecognizerConfiguration = {
+      startScanningTitle: "Scan a German ID Card or Driver's License",
       // Customize colors, text resources, behavior, etc..
       //shouldSavePhotoImageInStorage: true,
       // see further configs...
