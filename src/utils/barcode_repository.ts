@@ -1,14 +1,12 @@
-import { BarcodeResultField } from "capacitor-plugin-scanbot-sdk";
-
 export class BarcodeRepository {
-    private static barcodes: BarcodeResultField[] = [];
+    private static barcodes: any = [];
 
-    public static async addBarcodes(barcodes: BarcodeResultField[]) {
+    public static async addBarcodes(barcodes: any) {
         if (this.barcodes.length > 0) this.barcodes = [];
         this.barcodes = this.barcodes.concat(barcodes);
     }
 
-    public static getBarcodes(): BarcodeResultField[] {
+    public static getBarcodes(): any {
         return this.barcodes;
     }
 }

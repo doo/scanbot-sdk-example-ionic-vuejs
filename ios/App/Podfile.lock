@@ -1,26 +1,25 @@
 PODS:
-  - Capacitor (5.6.0):
+  - Capacitor (6.1.2):
     - CapacitorCordova
-  - CapacitorApp (5.0.7):
+  - CapacitorApp (6.0.1):
     - Capacitor
-  - CapacitorCamera (5.0.9):
+  - CapacitorCamera (6.1.0):
     - Capacitor
-  - CapacitorCordova (5.6.0)
-  - CapacitorFilesystem (5.2.1):
+  - CapacitorCordova (6.1.2)
+  - CapacitorFilesystem (6.0.1):
     - Capacitor
-  - CapacitorHaptics (5.0.7):
+  - CapacitorHaptics (6.0.1):
     - Capacitor
-  - CapacitorKeyboard (5.0.8):
+  - CapacitorKeyboard (6.0.2):
     - Capacitor
-  - CapacitorPluginScanbotSdk (2.2.4):
+  - CapacitorPluginScanbotSdk (5.1.0):
     - Capacitor
-    - ScanbotSDK/ALL (= 2.2.0)
-    - ScanbotSDKNativeWrapper/ALL (= 2.2.0.7)
-  - CapacitorStatusBar (5.0.7):
+    - ScanbotSDKNativeWrapper/ALL (= 5.1.4.2)
+  - CapacitorStatusBar (6.0.1):
     - Capacitor
-  - ScanbotSDK/ALL (2.2.0)
-  - ScanbotSDKNativeWrapper/ALL (2.2.0.7):
-    - ScanbotSDK/ALL (= 2.2.0)
+  - ScanbotSDK/ALL (5.1.4)
+  - ScanbotSDKNativeWrapper/ALL (5.1.4.2):
+    - ScanbotSDK/ALL (= 5.1.4)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -59,18 +58,18 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
 
 SPEC CHECKSUMS:
-  Capacitor: ebfc16cdb8116d04c101686b080342872da42d43
-  CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
-  CapacitorCamera: 4892c5c392f60039d853dde78bc50ba19fbd113e
-  CapacitorCordova: 931b48fcdbc9bc985fc2f16cec9f77c794a27729
-  CapacitorFilesystem: 9f3e3c7fea2fff12f46dd5b07a2914f2103e4cfc
-  CapacitorHaptics: 7c7c206f0c96a628fed073830c96d28c4b2e772e
-  CapacitorKeyboard: aec619a578235c6ce279075009a2689c2cf5c42c
-  CapacitorPluginScanbotSdk: 9b1a1bbe01adf2e970862cda26e95070450c90c7
-  CapacitorStatusBar: f390fbb49b82ffb754ea4b3cf71dc8b048baf3e7
-  ScanbotSDK: 88ea9100f2d6fe0c0fddc707bff470e7f71387d8
-  ScanbotSDKNativeWrapper: 19e20308d7b7334081a1fa8494ea616f9f324b3f
+  Capacitor: 679f9673fdf30597493a6362a5d5bf233d46abc2
+  CapacitorApp: 0bc633b4eae40a1f32cd2834788fad3bc42da6a1
+  CapacitorCamera: 81ce64062cd82b82cc75a79616fda4bd09d7f643
+  CapacitorCordova: f48c89f96c319101cd2f0ce8a2b7449b5fb8b3dd
+  CapacitorFilesystem: 37fb3aa5c945b4539ab11c74a5c57925a302bf24
+  CapacitorHaptics: fe689ade56ef20ec9b041a753c6da70c5d8ec9a9
+  CapacitorKeyboard: 2700f9b18687be021e28b5a09b59eb151a46d5e0
+  CapacitorPluginScanbotSdk: c3a78f6a858d67a4ce9fe7660c0b31e528c61621
+  CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
+  ScanbotSDK: af2b386a0cb9e3d460073727adfe5d0c2e9f40d1
+  ScanbotSDKNativeWrapper: b5b68b3809bcd64dbc3ed4f909b4e919c06c8a87
 
 PODFILE CHECKSUM: 8777c1cb3493933c63068654ef52b9e9efd29389
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

@@ -21,26 +21,27 @@
                     <ion-button @click="startCroppingScreen()">Crop</ion-button>
 
                     <ion-button id="open-filter-option" expand="block">Filter</ion-button>
-                    <CommonModalView trigger="open-filter-option" title="Filter Options" v-bind:optionList="FilterOptions"
-                        :onItemClick="onFilterSelected" ref="filterOptionModal" />
+                    <CommonModalView trigger="open-filter-option" title="Filter Options"
+                        v-bind:optionList="FilterOptions" :onItemClick="onFilterSelected" ref="filterOptionModal" />
                 </ion-buttons>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
 </template>
-  
+
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonImg, IonCard, onIonViewWillEnter } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { ImageFilterType, Page } from 'capacitor-plugin-scanbot-sdk';
+import { Page, ParametricFilter } from 'capacitor-plugin-scanbot-sdk';
 import { ScanbotSDKService } from '@/services/scanbot-service';
 import { StorageService } from '@/services/storage_service';
 import { ShowAlert } from '@/services/alert_service';
 import CommonModalView from '../../common_views/CommonModalView.vue';
 import { FilterOptions } from '@/utils/data_util';
 import { Capacitor } from '@capacitor/core';
+import { ImageFilterEnum } from '@/enums/filter_enum';
 
 const router = useRouter();
 const selectedPageId = router.currentRoute.value.params.selectedPageId as unknown as string;
@@ -91,7 +92,7 @@ const startCroppingScreen = async () => {
 }
 
 /* Apply filter to the image */
-const onFilterSelected = async (selectedFilterItem: string) => {
+const onFilterSelected = async (selectedFilterItem: ImageFilterEnum) => {
     if (!(await ScanbotSDKService.validateLicense())) {
         filterOptionModal.value.cancel();
         return;
@@ -100,7 +101,7 @@ const onFilterSelected = async (selectedFilterItem: string) => {
     try {
         const filteredResult = await ScanbotSDKService.applyImageFilterOnPage(
             selectedPage,
-            selectedFilterItem as ImageFilterType
+            selectedFilterItem
         );
 
         filterOptionModal.value.cancel();

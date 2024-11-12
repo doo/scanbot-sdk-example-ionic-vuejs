@@ -1,7 +1,7 @@
 <template>
     <CoreFeatureItemsView title="Scan Barcodes" v-bind:coreItems="coreItems" :onItemClick="onItemClick" />
 </template>
-  
+
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { onIonViewWillEnter } from '@ionic/vue';
@@ -16,6 +16,7 @@ import CoreFeatureItemsView from '../../common_views/CoreFeatureItemsView.vue';
 import { BarcodeRepository } from '@/utils/barcode_repository';
 import { PickImage, PickImages } from '@/utils/camera_util';
 import { dismissLoading, showLoading } from '@/utils/loading_util';
+import { BarcodeItem } from 'capacitor-plugin-scanbot-sdk/dist/esm/ui_v2';
 
 const router = useRouter();
 let coreItems: { key: CoreFeatureEnum; value: string; }[] = [];
@@ -25,34 +26,51 @@ onIonViewWillEnter(() => {
     coreItems = GetItemList(selectedItemId);
 });
 
-/** Scan barcodes */
-const startBarcodeScanner = async () => {
+/** Start RTU UI Single Scanner */
+const startSingleBarcodeScanner = async () => {
     if (!(await ScanbotSDKService.validateLicense())) { return; }
 
     try {
-        const barcodeResult = await ScanbotSDKService.startBarcodeScanner();
+        const barcodeResult = await ScanbotSDKService.startSingleBarcodeScanner();
         if (barcodeResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Barcode Scanner has been cancelled.', ['OK']);
             return;
         };
-        await navigateToBarcodeResultPage(barcodeResult?.barcodes!);
+        await navigateToBarcodeResultPage(barcodeResult?.items!);
     }
     catch (error) {
         await ShowAlert('Scan Barcodes Failed', JSON.stringify(error), ['OK']);
     }
 }
 
-/** Scan batch barcodes */
-const startBatchBarcodeScanner = async () => {
+/** Start RTU UI Multi Barcode Scanner */
+const startMultiBarcodeScanner = async () => {
     if (!(await ScanbotSDKService.validateLicense())) { return; }
 
     try {
-        const batchBarcodeResult = await ScanbotSDKService.startBatchBarcodeScanner();
+        const batchBarcodeResult = await ScanbotSDKService.startMultiBarcodeScanner();
         if (batchBarcodeResult!.status == 'CANCELED') {
             await ShowAlert('Information', 'Batch Barcode Scanner has been cancelled.', ['OK']);
             return;
         };
-        await navigateToBarcodeResultPage(batchBarcodeResult?.barcodes!);
+        await navigateToBarcodeResultPage(batchBarcodeResult?.items!);
+    }
+    catch (error) {
+        await ShowAlert('Scan Barcodes Failed', JSON.stringify(error), ['OK']);
+    }
+}
+
+/** Start RTU UI Multi AR Overlay Barcode Scanner */
+const startMultiAROverlayBarcodeScanner = async () => {
+    if (!(await ScanbotSDKService.validateLicense())) { return; }
+
+    try {
+        const batchBarcodeResult = await ScanbotSDKService.startMultiARBarcodeScanner();
+        if (batchBarcodeResult!.status == 'CANCELED') {
+            await ShowAlert('Information', 'Batch Barcode Scanner has been cancelled.', ['OK']);
+            return;
+        };
+        await navigateToBarcodeResultPage(batchBarcodeResult?.items!);
     }
     catch (error) {
         await ShowAlert('Scan Barcodes Failed', JSON.stringify(error), ['OK']);
@@ -80,42 +98,8 @@ const detectBarcodesFromImage = async () => {
     }
 }
 
-/** Detect barcodes from imported images */
-const detectBarcodeFromImages = async () => {
-    if (!(await ScanbotSDKService.validateLicense())) { return; }
-
-    try {
-        const barcodes: BarcodeResultField[] = [];
-        const originalImageFileUrls: string[] = [];
-        const pickedPhotos = await PickImages();
-
-        await showLoading();
-        pickedPhotos.forEach(photo => {
-            originalImageFileUrls.push(photo.path!);
-        });
-
-        const detectedBarcodesResult = await ScanbotSDKService.detectBarcodesOnImages(originalImageFileUrls);
-        await dismissLoading();
-        if (detectedBarcodesResult!.status == 'CANCELED') {
-            await ShowAlert('Information', 'Barcode detector has been cancelled.', ['OK']);
-            return;
-        };
-
-        detectedBarcodesResult?.results!.forEach(element => {
-            element.barcodeResults.forEach(barcode => {
-                barcodes.push(barcode);
-            });
-        });
-        await navigateToBarcodeResultPage(barcodes);
-    }
-    catch (error) {
-        await dismissLoading();
-        await ShowAlert('Detect Barcodes Failed', 'Please try again!', ['OK']);
-    }
-}
-
 /** Navigate to barcode result page */
-const navigateToBarcodeResultPage = async (barcodes: BarcodeResultField[]) => {
+const navigateToBarcodeResultPage = async (barcodes: any) => {
     try {
         await BarcodeRepository.addBarcodes(barcodes);
         await router.push('/barcode_result');
@@ -130,20 +114,20 @@ const navigateToBarcodeResultPage = async (barcodes: BarcodeResultField[]) => {
 // -----------------
 const onItemClick = async (selectedItem: CoreFeatureEnum) => {
     switch (selectedItem) {
-        case CoreFeatureEnum.Barcode: {
-            await startBarcodeScanner();
+        case CoreFeatureEnum.SingleBarcode: {
+            await startSingleBarcodeScanner();
             break;
         }
-        case CoreFeatureEnum.BatchBarcode: {
-            await startBatchBarcodeScanner();
+        case CoreFeatureEnum.MultiBarcode: {
+            await startMultiBarcodeScanner();
+            break;
+        }
+        case CoreFeatureEnum.MultiARBarcode: {
+            await startMultiAROverlayBarcodeScanner();
             break;
         }
         case CoreFeatureEnum.ImportBarcodeImage: {
             await detectBarcodesFromImage();
-            break;
-        }
-        case CoreFeatureEnum.ImportBarcodeImages: {
-            await detectBarcodeFromImages();
             break;
         }
         default: {

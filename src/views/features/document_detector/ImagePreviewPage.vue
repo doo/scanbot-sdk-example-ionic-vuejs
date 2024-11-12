@@ -44,10 +44,10 @@
         </ion-footer>
     </ion-page>
 </template>
-  
+
 <script setup lang="ts">
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonImg, IonCol, onIonViewWillEnter, IonLabel } from '@ionic/vue';
-import { Page, PDFPageSize } from 'capacitor-plugin-scanbot-sdk';
+import { Page, PageSize } from 'capacitor-plugin-scanbot-sdk';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -132,7 +132,7 @@ const createPDF = async (selectedItem: PDFPageSizeEnum) => {
 
     try {
         const imageUrls = pages.map(p => p.documentImageFileUri!);
-        const pdfPageSize = PDFPageSizeList[selectedItem].value as PDFPageSize;
+        const pdfPageSize = PDFPageSizeList[selectedItem].value as PageSize;
 
         const result = await ScanbotSDKService.createPDF(imageUrls, pdfPageSize);
 

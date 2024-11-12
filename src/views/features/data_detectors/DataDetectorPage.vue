@@ -1,7 +1,7 @@
 <template>
     <CoreFeatureItemsView title="Data Detectors" v-bind:coreItems="coreItems" :onItemClick="onItemClick" />
 </template>
-  
+
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { onIonViewWillEnter } from '@ionic/vue';
@@ -35,7 +35,7 @@ const startMRZScanner = async () => {
             await ShowAlert('Information', 'MRZ detector has been cancelled.', ['OK']);
             return;
         };
-        DataDetectorRepository.MrzResult = mrzResult;
+        DataDetectorRepository.GeneratMRZResult(mrzResult);
         await router.push('/mrz_result');
     }
     catch (error) {
@@ -129,7 +129,7 @@ const startMedicalCertificateScanner = async () => {
             await ShowAlert('Information', 'Medicle certificate data detector has been cancelled.', ['OK']);
             return;
         };
-        DataDetectorRepository.MedResult = medicalCertificateResult;
+        DataDetectorRepository.GenerateMedData(medicalCertificateResult);
         await router.push('/medical_certificate');
     }
     catch (error) {

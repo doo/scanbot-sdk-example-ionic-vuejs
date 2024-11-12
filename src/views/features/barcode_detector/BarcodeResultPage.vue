@@ -11,11 +11,11 @@
         <ion-content color="light">
             <ion-list :inset="true">
                 <ion-item :detail="false" v-for="barcode in barcodes">
-                    <CommonLabel v-bind:title="barcode.type" v-bind:value="barcode.text" />
+                    <CommonLabel v-bind:title="barcode.type!" v-bind:value="barcode.textWithExtension" />
                 </ion-item>
             </ion-list>
 
-             <!-- display empty view when no barcodes detected -->
+            <!-- display empty view when no barcodes detected -->
             <CommonEmptyView message="No barcodes detected, Please try again!" v-bind:hidden="isEmptyTextHidden" />
         </ion-content>
     </ion-page>
@@ -25,12 +25,12 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter, IonList, IonItem } from '@ionic/vue';
 import { ref } from 'vue';
 
-import { BarcodeResultField } from 'capacitor-plugin-scanbot-sdk';
 import { BarcodeRepository } from '@/utils/barcode_repository';
 import CommonLabel from '@/views/common_views/CommonLabel.vue';
 import CommonEmptyView from '@/views/common_views/CommonEmptyView.vue';
+import { BarcodeItem } from 'capacitor-plugin-scanbot-sdk/dist/esm/ui_v2';
 
-let barcodes = ref<BarcodeResultField[]>([]);
+let barcodes = ref<BarcodeItem[]>([]);
 let isEmptyTextHidden = ref<boolean>(true);
 
 onIonViewDidEnter(() => {
