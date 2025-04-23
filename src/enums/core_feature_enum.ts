@@ -9,11 +9,11 @@ export enum CoreFeatureEnum {
     MRZ,
     EHIC,
     Check,
-    ImportCheckOnImage,
     LicensePlate,
     TextData,
     MedicalCertificate,
     GenericDocument,
     LicenseInfo,
     LearnMore,
+    OCR_CONFIGS
 }

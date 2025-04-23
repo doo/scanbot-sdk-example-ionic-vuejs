@@ -35,8 +35,8 @@ import {
   IonCardTitle,
 } from "@ionic/vue";
 
-import { ScanbotSDKService } from '../services/scanbot-service';
-import { CORE_FEATURES } from "../utils/data_util";
+import { ScanbotSDKService } from '@/services/scanbot-service';
+import { CORE_FEATURES } from "@/utils/data_util";
 import { CoreFeatureIdEnum } from "@/enums/core_feature_id_enum";
 import { ShowAlert } from "@/services/alert_service";
 
@@ -55,11 +55,11 @@ const itemOnClick = async (selectedItem: CoreFeatureIdEnum) => {
       await router.push('/document_scanner/' + selectedItem);
       break;
     }
-    case CoreFeatureIdEnum.BarcodeDetactor: {
+    case CoreFeatureIdEnum.BarcodeDetector: {
       await router.push('/barcode_scanner/' + selectedItem);
       break;
     }
-    case CoreFeatureIdEnum.DataDetactor: {
+    case CoreFeatureIdEnum.DataDetector: {
       await router.push('/data_detector/' + selectedItem);
       break;
     }

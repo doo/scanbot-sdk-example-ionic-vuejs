@@ -2,7 +2,7 @@ export enum ImageFilterEnum {
     ScanbotBinarizationFilter,
     CustomBinarizationFilter,
     ColorDocumentFilter,
-    BrightnesFilter,
+    BrightnessFilter,
     ContrastFilter,
     GrayscaleFilter,
     WhiteBlackPointFilter,
