@@ -1,28 +1,42 @@
-import { Directory, Filesystem } from "@capacitor/filesystem";
+import {Directory, Filesystem} from "@capacitor/filesystem";
 import {
-  ScanbotSDK,
-  ScanbotSdkConfiguration,
-  DocumentScannerConfiguration,
-  BarcodeScannerConfiguration,
-  BatchBarcodeScannerConfiguration,
-  MrzScannerConfiguration,
-  HealthInsuranceCardScannerConfiguration,
+  BrightnessFilter,
   CheckRecognizerConfiguration,
-  TextDataScannerConfiguration,
+  ColorDocumentFilter,
+  ContrastFilter,
+  CroppingConfiguration,
+  CustomBinarizationFilter,
+  DocumentScannerConfiguration,
+  FinderDocumentScannerConfiguration,
+  GenericDocumentRecognizerConfiguration,
+  GrayscaleFilter,
+  HealthInsuranceCardScannerConfiguration,
+  LegacyFilter,
   LicensePlateScannerConfiguration,
   MedicalCertificateRecognizerConfiguration,
-  CroppingConfiguration,
+  MrzScannerConfiguration,
   Page,
-  PDFPageSize,
-  ImageFilterType,
-  GenericDocumentRecognizerConfiguration,
-  FinderDocumentScannerConfiguration,
+  PageSize,
+  ScanbotBinarizationFilter,
+  ScanbotSDK,
+  ScanbotSdkConfiguration,
+  TextDataScannerConfiguration,
+  WhiteBlackPointFilter,
 } from "capacitor-plugin-scanbot-sdk";
 
-import { ShowAlert } from "./alert_service";
+import {
+  BarcodeMappedData,
+  BarcodeScannerConfiguration,
+  MultipleScanningMode,
+  SingleScanningMode,
+  startBarcodeScanner
+} from 'capacitor-plugin-scanbot-sdk/ui_v2';
+
+import {ShowAlert} from "./alert_service";
+import {ImageFilterEnum} from "@/enums/filter_enum";
 
 export default class ScanbotService {
-  
+
   /*
   * TODO add the license key here.
   * Please note: The Scanbot SDK will run without a license key for one minute per session!
@@ -94,7 +108,7 @@ export default class ScanbotService {
   public startDocumentScanner = async () => {
     const configuration: DocumentScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
-      cameraPreviewMode: "FIT_IN",
+      cameraPreviewMode: "FILL_IN",
       orientationLockMode: "PORTRAIT",
       pageCounterButtonTitle: "%d Page(s)",
       multiPageEnabled: true,
@@ -141,71 +155,130 @@ export default class ScanbotService {
     });
   }
 
-  // ----------------
-  // Barcode Scanner
-  // ----------------
-  public startBarcodeScanner = async () => {
-    const configuration: BarcodeScannerConfiguration = {
-      // Customize colors, text resources, behavior, etc..
-      finderTextHint:
-        "Please align the barcode or QR code in the frame above to scan it.",
-      orientationLockMode: "PORTRAIT",
-      finderLineColor: "#0000ff",
+  // -----------------------
+  // Single Barcode Scanner
+  // -----------------------
+  public startSingleBarcodeScanner = async () => {
+    // Create the default configuration object.
+    const config = new BarcodeScannerConfiguration();
 
-      overlayConfiguration: {
-        overlayEnabled: true,
-        automaticSelectionEnabled: false,
-        textFormat: "CODE_AND_TYPE",
-        /** The color of the polygon in the selection overlay. */
-        polygonColor: "#0000ff",
-        /** The color of the text in the selection overlay. */
-        textColor: "#000fff",
-        /** The color of the texts background in the selection overlay. */
-        textContainerColor: "#00ffff",
-        /** The color of the polygon in the selection overlay, when highlighted. */
-        highlightedPolygonColor: "#42f566",
-        /** The color of the text in the selection overlay, when highlighted. */
-        highlightedTextColor: "#42f566",
-        /** The color of the texts background in the selection overlay, when highlighted. */
-        highlightedTextContainerColor: "#f5bf42",
-      },
-      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
-      // see further configs ...
-    };
-    return await ScanbotSDK.startBarcodeScanner(configuration);
+    // Initialize the use case for single scanning.
+    config.useCase = new SingleScanningMode();
+
+    // Enable and configure the confirmation sheet.
+    config.useCase.confirmationSheetEnabled = true;
+    config.useCase.sheetColor = '#FFFFFF';
+
+    // Hide/unhide the barcode image.
+    config.useCase.barcodeImageVisible = true;
+
+    // Configure the barcode title of the confirmation sheet.
+    config.useCase.barcodeTitle.visible = true;
+    config.useCase.barcodeTitle.color = '#000000';
+
+    // Configure the barcode subtitle of the confirmation sheet.
+    config.useCase.barcodeSubtitle.visible = true;
+    config.useCase.barcodeSubtitle.color = '#000000';
+
+    // Configure the cancel button of the confirmation sheet.
+    config.useCase.cancelButton.text = 'Close';
+    config.useCase.cancelButton.foreground.color = '#C8193C';
+    config.useCase.cancelButton.background.fillColor = '#00000000';
+
+    // Configure the submit button of the confirmation sheet.
+    config.useCase.submitButton.text = 'Submit';
+    config.useCase.submitButton.foreground.color = '#FFFFFF';
+    config.useCase.submitButton.background.fillColor = '#C8193C';
+
+    // Configure other parameters pertaining to single-scanning mode as needed.
+
+    return await startBarcodeScanner(config);
   }
 
   // ----------------------
-  // Batch Barcode Scanner
+  // Multi Barcode Scanner
   // ----------------------
-  public startBatchBarcodeScanner = async () => {
-    const configuration: BatchBarcodeScannerConfiguration = {
-      // Customize colors, text resources, behavior, etc..
-      finderTextHint:
-        "Please align the barcode or QR code in the frame above to scan it.",
-      orientationLockMode: "PORTRAIT",
-      finderLineColor: "#0000ff",
-      // overlayConfiguration: {
-      //   overlayEnabled: true,
-      //   automaticSelectionEnabled: false,
-      //   textFormat: "CODE_AND_TYPE",
-      //   /** The color of the polygon in the selection overlay. */
-      //   polygonColor: "#0000ff",
-      //   /** The color of the text in the selection overlay. */
-      //   textColor: "#000fff",
-      //   /** The color of the texts background in the selection overlay. */
-      //   textContainerColor: "#00ffff",
-      //   /** The color of the polygon in the selection overlay, when highlighted. */
-      //   highlightedPolygonColor: "#42f566",
-      //   /** The color of the text in the selection overlay, when highlighted. */
-      //   highlightedTextColor: "#42f566",
-      //   /** The color of the texts background in the selection overlay, when highlighted. */
-      //   highlightedTextContainerColor: "#f5bf42",
-      // },
-      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
-      // see further configs ...
+  public startMultiBarcodeScanner = async () => {
+    // Create the default configuration object.
+    const config = new BarcodeScannerConfiguration();
+
+    // Initialize the use case for multiple scanning.
+    config.useCase = new MultipleScanningMode();
+
+    // Set the counting mode.
+    config.useCase.mode = 'COUNTING';
+
+    // Set the sheet mode for the barcodes preview.
+    config.useCase.sheet.mode = 'COLLAPSED_SHEET';
+
+    // Set the height for the collapsed sheet.
+    config.useCase.sheet.collapsedVisibleHeight = 'LARGE';
+
+    // Enable manual count change.
+    config.useCase.sheetContent.manualCountChangeEnabled = true;
+
+    // Set the delay before the same barcode counting repeat.
+    config.useCase.countingRepeatDelay = 1000;
+
+    // Configure the submit button.
+    config.useCase.sheetContent.submitButton.text = 'Submit';
+    config.useCase.sheetContent.submitButton.foreground.color = '#000000';
+
+    // Implement mapping for the barcode item information
+    config.useCase.barcodeInfoMapping.barcodeItemMapper = (
+      barcodeItem,
+      onResult,
+      onError
+    ) => {
+      /** TODO: process scan result as needed to get your mapped data,
+       * e.g. query your server to get product image, title and subtitle.
+       * See example below.
+       */
+      const title = `Some product ${barcodeItem.textWithExtension}`;
+      const subtitle = barcodeItem.type ?? 'Unknown';
+
+      // If an image from URL is used, on Android platform INTERNET permission is required.
+      const image =
+        'https://avatars.githubusercontent.com/u/1454920';
+      // To show captured barcode image use BarcodeMappedData.barcodeImageKey
+      // const image = BarcodeMappedData.barcodeImageKey;
+
+      /** Call onError() in case of error during obtaining mapped data. */
+      if (barcodeItem.textWithExtension == 'Error occurred!') {
+        onError();
+      } else {
+        onResult(
+          new BarcodeMappedData({
+            title: title,
+            subtitle: subtitle,
+            barcodeImage: image,
+          })
+        );
+      }
     };
-    return await ScanbotSDK.startBatchBarcodeScanner(configuration);
+    return await startBarcodeScanner(config);
+  }
+
+  // ------------------------
+  // Multi AR Barcode Scanner
+  // ------------------------
+  public startMultiARBarcodeScanner = async () => {
+    // Create the default configuration object.
+    const config = new BarcodeScannerConfiguration();
+
+    // Configure the usecase.
+    config.useCase = new MultipleScanningMode();
+    config.useCase.mode = 'UNIQUE';
+    config.useCase.sheet.mode = 'COLLAPSED_SHEET';
+    config.useCase.sheet.collapsedVisibleHeight = 'SMALL';
+    // Configure AR Overlay.
+    config.useCase.arOverlay.visible = true;
+    config.useCase.arOverlay.automaticSelectionEnabled = false;
+    // Configure other parameters, pertaining to use case as needed.
+
+    // Configure other parameters as needed.
+
+    return await startBarcodeScanner(config);
   }
 
   // --------------------------------------
@@ -214,17 +287,6 @@ export default class ScanbotService {
   public detectBarcodesOnImage = async (imageFileUri: string) => {
     return await ScanbotSDK.detectBarcodesOnImage({
       imageFileUri: imageFileUri,
-      //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
-      // see further args...
-    });
-  }
-
-  // -------------------------------------
-  // Detect barcodes from imported images
-  // -------------------------------------
-  public async detectBarcodesOnImages(imageFilesUris: string[]) {
-    return await ScanbotSDK.detectBarcodesOnImages({
-      imageFileUris: imageFilesUris,
       //barcodeFormats: ['QR_CODE', 'EAN_13', ...], // optional filter for specific barcode types
       // see further args...
     });
@@ -315,7 +377,6 @@ export default class ScanbotService {
         preferredZoom: 2.0,
         shouldMatchSubstring: false,
         significantShakeDelay: -1,
-        textFilterStrategy: "Document",
         unzoomedFinderHeight: 40,
       },
       // Other UI configs...
@@ -329,7 +390,6 @@ export default class ScanbotService {
   public startLicensePlateScanner = async () => {
     const configuration: LicensePlateScannerConfiguration = {
       // Customize colors, text resources, behavior, etc..
-      scanStrategy: "MlBased",
       topBarBackgroundColor: "#c8193c",
       cancelButtonTitle: "Cancel",
       finderLineColor: "#c8193c",
@@ -348,7 +408,7 @@ export default class ScanbotService {
   public startGenericDocumentRecognizer = async () => {
     const configuration: GenericDocumentRecognizerConfiguration = {
       startScanningTitle: "Scan a German ID Card or Driver's License",
-      // Customize colors, text resources, behavior, etc..
+      // Customize colors, text resources, behavior, etc...
       //shouldSavePhotoImageInStorage: true,
       // see further configs...
     };
@@ -370,20 +430,49 @@ export default class ScanbotService {
   // ----------------------------------
   // Apply filter for a selected image
   // ----------------------------------
-  public applyImageFilterOnPage = async (scannedPage: Page, imageFilter: ImageFilterType) => {
-    return await ScanbotSDK.applyImageFilterOnPage({
+  public applyImageFilterOnPage = async (scannedPage: Page, imageFilter: ImageFilterEnum) => {
+    const filter = this.getFilterInstance(imageFilter);
+    return await ScanbotSDK.applyImageFiltersOnPage({
       page: scannedPage,
-      filter: imageFilter,
+      filters: [filter!],
     });
+  }
+
+  // ---------------------------------------------
+  // Return an instance of parametric filter type
+  // ---------------------------------------------
+  private getFilterInstance = (imageFilter: ImageFilterEnum) => {
+    switch (imageFilter) {
+      case ImageFilterEnum.ScanbotBinarizationFilter:
+        return new ScanbotBinarizationFilter();
+      case ImageFilterEnum.CustomBinarizationFilter:
+        return new CustomBinarizationFilter({ preset: 'PRESET_1' });
+      case ImageFilterEnum.ColorDocumentFilter:
+        return new ColorDocumentFilter();
+      case ImageFilterEnum.BrightnessFilter:
+        return new BrightnessFilter({ brightness: 0.2 });
+      case ImageFilterEnum.ContrastFilter:
+        return new ContrastFilter({ contrast: 2 });
+      case ImageFilterEnum.GrayscaleFilter:
+        return new GrayscaleFilter();
+      case ImageFilterEnum.WhiteBlackPointFilter:
+        return new WhiteBlackPointFilter({ blackPoint: 0.2, whitePoint: 0.8 });
+      case ImageFilterEnum.LegacyFilter:
+        return new LegacyFilter();
+      default:
+        break;
+    }
   }
 
   // ---------------------
   // PDF Create Feature
   // ---------------------
-  public async createPDF(urls: string[], pageSize: PDFPageSize) {
+  public async createPDF(urls: string[], pageSize: PageSize) {
     return await ScanbotSDK.createPDF({
       imageFileUris: urls,
-      pageSize: pageSize,
+      options: {
+        pageSize: pageSize,
+      }
     });
   }
 
@@ -394,9 +483,9 @@ export default class ScanbotService {
     return await ScanbotSDK.writeTIFF({
       imageFileUris: urls,
       options: {
-        oneBitEncoded: binarized,
+        binarizationFilter: binarized ? new ScanbotBinarizationFilter() : undefined,
         dpi: 300,
-        compression: binarized ? 'CCITT_T6' : 'ADOBE_DEFLATE',
+        compression: binarized ? 'CCITT_T6' : 'ADOBE_DEFLATE', // optional compression. see documentation!
       },
     });
   }
@@ -405,17 +494,15 @@ export default class ScanbotService {
   // SDK License Information
   // -------------------------
   public viewLicenseInfo = async () => {
-    const licenseInfo = await ScanbotSDK.getLicenseInfo();
-    return licenseInfo;
+    return await ScanbotSDK.getLicenseInfo();
   }
 
   // -------------------------
-  // OCR Confoguaration
+  // OCR Configuration
   // -------------------------
   public viewOcrConfigs = async () => {
     try {
-      const ocrInfo = await ScanbotSDK.getOCRConfigs();
-      return ocrInfo;
+      return await ScanbotSDK.getOCRConfigs();
     } catch (error) {
       alert(JSON.stringify(error));
     }

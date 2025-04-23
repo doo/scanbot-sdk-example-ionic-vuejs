@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "io.scanbot.example.sdk.capacitor.ionic.vuejs"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion 34
     defaultConfig {
         applicationId "io.scanbot.example.sdk.capacitor.ionic.vuejs"
         minSdkVersion rootProject.ext.minSdkVersion

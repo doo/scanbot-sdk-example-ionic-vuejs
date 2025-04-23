@@ -1,6 +1,6 @@
 export enum CoreFeatureIdEnum {
     DocumentDetector,
-    BarcodeDetactor,
-    DataDetactor,
+    BarcodeDetector,
+    DataDetector,
     Other
 }

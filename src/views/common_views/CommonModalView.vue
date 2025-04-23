@@ -1,6 +1,5 @@
 <template>
-    <ion-modal ref="modal" :trigger=props.trigger :initial-breakpoint="0.3" :breakpoints="[0, 0.25, 0.5, 0.75, 1]"
-        @willDismiss="onWillDismiss">
+    <ion-modal ref="modal" :trigger=props.trigger :initial-breakpoint="0.3" :breakpoints="[0, 0.25, 0.5, 0.75, 1]">
         <ion-header>
             <ion-toolbar>
                 <ion-title>{{ props.title }}</ion-title>
@@ -23,22 +22,16 @@
 <script setup lang="ts">
 import { IonButtons, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, IonModal, IonItem, IonLabel, IonList } from '@ionic/vue';
 import { ref } from 'vue';
-import { OverlayEventDetail } from '@ionic/core/components';
 
 const modal = ref();
 
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
-const onWillDismiss = (ev: CustomEvent<OverlayEventDetail>) => {
-    if (ev.detail.role === 'confirm') {
-    }
-};
-
 interface Props {
     trigger: string
     title: string
     optionList: { key: any; value: any; }[]
-    onItemClick: Function
+    onItemClick: (key: any) => void
 }
 
 const props = defineProps<Props>();

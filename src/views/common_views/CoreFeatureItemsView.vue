@@ -25,8 +25,8 @@ import { CoreFeatureEnum } from '@/enums/core_feature_enum';
 
 interface Props {
     title: string
-    coreItems: { key: CoreFeatureEnum; value: string; }[]
-    onItemClick: Function
+    coreItems: { key: CoreFeatureEnum; value: string; }[] | undefined
+    onItemClick: (key: CoreFeatureEnum) => void
 }
 const props = defineProps<Props>()
 </script>
