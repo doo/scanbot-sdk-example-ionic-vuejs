@@ -1,33 +1,39 @@
-import { Directory, Filesystem } from "@capacitor/filesystem";
+import {Directory, Filesystem} from "@capacitor/filesystem";
 import {
-  ScanbotSDK,
-  ScanbotSdkConfiguration,
-  DocumentScannerConfiguration,
-  MrzScannerConfiguration,
-  HealthInsuranceCardScannerConfiguration,
+  BrightnessFilter,
   CheckRecognizerConfiguration,
-  TextDataScannerConfiguration,
+  ColorDocumentFilter,
+  ContrastFilter,
+  CroppingConfiguration,
+  CustomBinarizationFilter,
+  DocumentScannerConfiguration,
+  FinderDocumentScannerConfiguration,
+  GenericDocumentRecognizerConfiguration,
+  GrayscaleFilter,
+  HealthInsuranceCardScannerConfiguration,
+  LegacyFilter,
   LicensePlateScannerConfiguration,
   MedicalCertificateRecognizerConfiguration,
-  CroppingConfiguration,
+  MrzScannerConfiguration,
   Page,
-  GenericDocumentRecognizerConfiguration,
-  FinderDocumentScannerConfiguration,
   PageSize,
   ScanbotBinarizationFilter,
-  CustomBinarizationFilter,
-  ColorDocumentFilter,
-  BrightnessFilter,
-  ContrastFilter,
-  GrayscaleFilter,
+  ScanbotSDK,
+  ScanbotSdkConfiguration,
+  TextDataScannerConfiguration,
   WhiteBlackPointFilter,
-  LegacyFilter,
 } from "capacitor-plugin-scanbot-sdk";
 
-import { startBarcodeScanner, BarcodeScannerConfiguration, SingleScanningMode, MultipleScanningMode, BarcodeMappedData } from 'capacitor-plugin-scanbot-sdk/ui_v2';
+import {
+  BarcodeMappedData,
+  BarcodeScannerConfiguration,
+  MultipleScanningMode,
+  SingleScanningMode,
+  startBarcodeScanner
+} from 'capacitor-plugin-scanbot-sdk/ui_v2';
 
-import { ShowAlert } from "./alert_service";
-import { ImageFilterEnum } from "@/enums/filter_enum";
+import {ShowAlert} from "./alert_service";
+import {ImageFilterEnum} from "@/enums/filter_enum";
 
 export default class ScanbotService {
 
@@ -184,7 +190,7 @@ export default class ScanbotService {
     config.useCase.submitButton.foreground.color = '#FFFFFF';
     config.useCase.submitButton.background.fillColor = '#C8193C';
 
-    // Configure other parameters, pertaining to single-scanning mode as needed.
+    // Configure other parameters pertaining to single-scanning mode as needed.
 
     return await startBarcodeScanner(config);
   }
@@ -211,7 +217,7 @@ export default class ScanbotService {
     // Enable manual count change.
     config.useCase.sheetContent.manualCountChangeEnabled = true;
 
-    // Set the delay before same barcode counting repeat.
+    // Set the delay before the same barcode counting repeat.
     config.useCase.countingRepeatDelay = 1000;
 
     // Configure the submit button.
@@ -231,7 +237,7 @@ export default class ScanbotService {
       const title = `Some product ${barcodeItem.textWithExtension}`;
       const subtitle = barcodeItem.type ?? 'Unknown';
 
-      // If image from URL is used, on Android platform INTERNET permission is required.
+      // If an image from URL is used, on Android platform INTERNET permission is required.
       const image =
         'https://avatars.githubusercontent.com/u/1454920';
       // To show captured barcode image use BarcodeMappedData.barcodeImageKey
@@ -402,7 +408,7 @@ export default class ScanbotService {
   public startGenericDocumentRecognizer = async () => {
     const configuration: GenericDocumentRecognizerConfiguration = {
       startScanningTitle: "Scan a German ID Card or Driver's License",
-      // Customize colors, text resources, behavior, etc..
+      // Customize colors, text resources, behavior, etc...
       //shouldSavePhotoImageInStorage: true,
       // see further configs...
     };
@@ -425,7 +431,7 @@ export default class ScanbotService {
   // Apply filter for a selected image
   // ----------------------------------
   public applyImageFilterOnPage = async (scannedPage: Page, imageFilter: ImageFilterEnum) => {
-    var filter = this.getFilterInstanse(imageFilter);
+    const filter = this.getFilterInstance(imageFilter);
     return await ScanbotSDK.applyImageFiltersOnPage({
       page: scannedPage,
       filters: [filter!],
@@ -435,7 +441,7 @@ export default class ScanbotService {
   // ---------------------------------------------
   // Return an instance of parametric filter type
   // ---------------------------------------------
-  private getFilterInstanse = (imageFilter: ImageFilterEnum) => {
+  private getFilterInstance = (imageFilter: ImageFilterEnum) => {
     switch (imageFilter) {
       case ImageFilterEnum.ScanbotBinarizationFilter:
         return new ScanbotBinarizationFilter();
@@ -443,7 +449,7 @@ export default class ScanbotService {
         return new CustomBinarizationFilter({ preset: 'PRESET_1' });
       case ImageFilterEnum.ColorDocumentFilter:
         return new ColorDocumentFilter();
-      case ImageFilterEnum.BrightnesFilter:
+      case ImageFilterEnum.BrightnessFilter:
         return new BrightnessFilter({ brightness: 0.2 });
       case ImageFilterEnum.ContrastFilter:
         return new ContrastFilter({ contrast: 2 });
@@ -488,17 +494,15 @@ export default class ScanbotService {
   // SDK License Information
   // -------------------------
   public viewLicenseInfo = async () => {
-    const licenseInfo = await ScanbotSDK.getLicenseInfo();
-    return licenseInfo;
+    return await ScanbotSDK.getLicenseInfo();
   }
 
   // -------------------------
-  // OCR Confoguaration
+  // OCR Configuration
   // -------------------------
   public viewOcrConfigs = async () => {
     try {
-      const ocrInfo = await ScanbotSDK.getOCRConfigs();
-      return ocrInfo;
+      return await ScanbotSDK.getOCRConfigs();
     } catch (error) {
       alert(JSON.stringify(error));
     }
