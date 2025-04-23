@@ -1,4 +1,9 @@
-import { CheckRecognizerResult, HealthInsuranceCardScannerResult, MedicalCertificateScannerResult, MrzScannerResult } from "capacitor-plugin-scanbot-sdk";
+import {
+    CheckRecognizerResult,
+    HealthInsuranceCardScannerResult,
+    MedicalCertificateScannerResult,
+    MrzScannerResult
+} from "capacitor-plugin-scanbot-sdk";
 
 export class DataDetectorRepository {
     public static MrzResult: { name: string; value: string; }[] = [];
@@ -10,16 +15,14 @@ export class DataDetectorRepository {
     public static CheckResult: { name: string; value: string; }[] = [];
 
     /** Generate readable data from MRZ results */
-    public static GeneratMRZResult = (mrzResult: MrzScannerResult) => {
-        var mrzData = [
-            { name: 'Successful Recognition', value: mrzResult.recognitionSuccessful ? 'YES' : 'NO' },
-            { name: 'Document Type', value: mrzResult.documentType },
-            { name: 'Raw MRZ String', value: mrzResult.rawString },
-            { name: 'Check digits count', value: mrzResult.checkDigitsCount.toString() },
-            { name: 'Valid check digits count', value: mrzResult.validCheckDigitsCount.toString() }
+    public static GenerateMRZResult = (mrzResult: MrzScannerResult) => {
+        this.MrzResult = [
+            {name: 'Successful Recognition', value: mrzResult.recognitionSuccessful ? 'YES' : 'NO'},
+            {name: 'Document Type', value: mrzResult.documentType},
+            {name: 'Raw MRZ String', value: mrzResult.rawString},
+            {name: 'Check digits count', value: mrzResult.checkDigitsCount.toString()},
+            {name: 'Valid check digits count', value: mrzResult.validCheckDigitsCount.toString()}
         ];
-
-        this.MrzResult = mrzData;
     }
 
     /** Generate readable data from check results */
@@ -37,7 +40,7 @@ export class DataDetectorRepository {
     }
 
     /** Generate readable data from ehic results */
-    public static GeneratEHICResult = (result: HealthInsuranceCardScannerResult) => {
+    public static GenerateEHICResult = (result: HealthInsuranceCardScannerResult) => {
         const newFields: { name: string, value: string }[] = []
         result.fields.map(item => {
             newFields.push({
@@ -81,14 +84,14 @@ export class DataDetectorRepository {
                     {
                         title: 'Patient Data',
                         items: [
-                            { key: 'Insuarance Provider', value: medData.patientData.insuranceProvider?.value! ?? "Not Provided" },
-                            { key: 'Full Name', value: (medData.patientData.firstName?.value! + medData.patientData.lastName?.value!) },
-                            { key: 'Address', value: (medData.patientData.address1?.value! + medData.patientData.address2?.value!) },
-                            { key: 'Diagnose', value: medData.patientData.diagnose?.value! ?? "Not Provided" },
-                            { key: 'Doctor Number', value: medData.patientData.doctorNumber?.value! ?? "Not Provided" },
-                            { key: 'Health Insurance Number', value: medData.patientData.healthInsuranceNumber?.value! ?? "Not Provided" },
-                            { key: 'Insured Person Number', value: medData.patientData.insuredPersonNumber?.value! ?? "Not Provided" },
-                            { key: 'Place Of Operation Number', value: medData.patientData.placeOfOperationNumber?.value! ?? "Not Provided" },
+                            { key: 'Insurance Provider', value: medData.patientData.insuranceProvider?.value ?? "Not Provided" },
+                            { key: 'Full Name', value: `${medData.patientData.firstName?.value} ${medData.patientData.lastName?.value}` },
+                            { key: 'Address', value: `${medData.patientData.address1?.value} ${medData.patientData.address2?.value}` },
+                            { key: 'Diagnose', value: medData.patientData.diagnose?.value ?? "Not Provided" },
+                            { key: 'Doctor Number', value: medData.patientData.doctorNumber?.value ?? "Not Provided" },
+                            { key: 'Health Insurance Number', value: medData.patientData.healthInsuranceNumber?.value ?? "Not Provided" },
+                            { key: 'Insured Person Number', value: medData.patientData.insuredPersonNumber?.value ?? "Not Provided" },
+                            { key: 'Place Of Operation Number', value: medData.patientData.placeOfOperationNumber?.value ?? "Not Provided" },
                         ]
                     }
                 )
@@ -98,13 +101,13 @@ export class DataDetectorRepository {
                     {
                         title: 'Dates',
                         items: [
-                            { key: 'Date of Birth', value: medData.dates.birthDate?.dateString! ?? "Not Provided" },
-                            { key: 'Diagnose On', value: medData.dates.diagnosedOn?.dateString! ?? "Not Provided" },
-                            { key: 'Document Date', value: medData.dates.documentDate?.dateString! ?? "Not Provided" },
-                            { key: 'Incapable of work since', value: medData.dates.incapableOfWorkSince?.dateString! ?? "Not Provided" },
-                            { key: 'Incapable of work until', value: medData.dates.incapableOfWorkUntil?.dateString! ?? "Not Provided" },
-                            { key: 'Child Needs Care From', value: medData.dates.childNeedsCareFrom?.dateString! ?? "Not Provided" },
-                            { key: 'Child Needs Care Until', value: medData.dates.childNeedsCareUntil?.dateString! ?? "Not Provided" },
+                            { key: 'Date of Birth', value: medData.dates.birthDate?.dateString ?? "Not Provided" },
+                            { key: 'Diagnose On', value: medData.dates.diagnosedOn?.dateString ?? "Not Provided" },
+                            { key: 'Document Date', value: medData.dates.documentDate?.dateString ?? "Not Provided" },
+                            { key: 'Incapable of work since', value: medData.dates.incapableOfWorkSince?.dateString ?? "Not Provided" },
+                            { key: 'Incapable of work until', value: medData.dates.incapableOfWorkUntil?.dateString ?? "Not Provided" },
+                            { key: 'Child Needs Care From', value: medData.dates.childNeedsCareFrom?.dateString ?? "Not Provided" },
+                            { key: 'Child Needs Care Until', value: medData.dates.childNeedsCareUntil?.dateString ?? "Not Provided" },
                         ]
                     }
                 )
@@ -129,9 +132,9 @@ export class DataDetectorRepository {
                 )
             }
         } catch (error) {
-            console.log('Medicle certificate data mapping error.');
+            console.log('Medical certificate data mapping error.');
         }
 
     }
-    static MedicalCertifacteResult: never[];
+
 }

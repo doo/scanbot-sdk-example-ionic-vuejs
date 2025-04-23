@@ -10,7 +10,7 @@
         </ion-header>
         <ion-content color="light">
             <ion-list :inset="true">
-                <ion-item-group v-for="medItem in medicalCertifacteResult" :key="medItem.title">
+                <ion-item-group v-for="medItem in medicalCertificateResult" :key="medItem.title">
                     <ion-list-header color="primary">
                         <ion-label style="font-size: 18px;">{{ medItem.title }}</ion-label>
                     </ion-list-header>
@@ -29,10 +29,10 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, Io
 import { DataDetectorRepository } from '@/utils/data_detector_repository';
 import CommonLabel from '@/views/common_views/CommonLabel.vue';
 
-let medicalCertifacteResult: { title: string; items: { key: string; value: string; }[]; }[] = [];
+let medicalCertificateResult: { title: string; items: { key: string; value: string; }[]; }[] = [];
 
 onIonViewWillEnter(async () => {
-    medicalCertifacteResult = DataDetectorRepository.MedResult;
+    medicalCertificateResult = DataDetectorRepository.MedResult;
 });
 
 </script>
